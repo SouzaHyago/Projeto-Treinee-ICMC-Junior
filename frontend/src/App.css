@@ -1,0 +1,11 @@
+.app-container {
+  min-height: 100vh;
+  background-image: url('./assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.auth-page {
+  background-image: url('./assets/background.jpg');
+}
