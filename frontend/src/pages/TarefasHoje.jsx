@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import imagemFundo from "../components/imagem.jpg";
+import imagemFundo from "../assets/imagem.jpg";
 import { CirclePlus, AlertTriangle } from "lucide-react";
 
 const ICON_STROKE_COLOR = "#949798";
@@ -275,18 +275,16 @@ const TarefasHoje = () => {
 
   return (
     <div
-      style={APP_BACKGROUND_STYLE}
-      className="p-8 font-poppins text-[#6B7280] flex justify-center items-center"
+      className="font-poppins text-[#6B7280] flex-1 flex flex-col h-full"
     >
       {/* Bloco principal */}
       <div
         className={`
-          ${CUSTOM_BG_COLOR} rounded-[50px] p-8 w-full max-w-6xl shadow-xl backdrop-blur-sm bg-opacity-90 
-          min-h-[500px] flex flex-col
+          ${CUSTOM_BG_COLOR} rounded-[50px] p-8 shadow-xl backdrop-blur-sm bg-opacity-90 flex flex-1 flex-col min-h-0
         `}
       >
         {/* Título e Contador (Contorno - FORMATO CÍRCULO/PÍLULA) */}
-        <div className="flex items-center mb-6">
+        <div className="flex items-center mb-6 flex-shrink-0">
           <h1 className="text-3xl font-bold text-gray-800 mr-3">Hoje</h1>
           <span
             // CLASSE CORRIGIDA: De volta para 'rounded-full'
@@ -299,12 +297,14 @@ const TarefasHoje = () => {
         </div>
 
         {/* CONTAINER PARA A BORDA DO CONTEÚDO */}
-        <div className="border border-[#949798] rounded-[25px] p-10 flex-grow flex justify-center items-center">
+        <div className="border border-[#949798] rounded-[25px] p-10 flex-1 flex flex-col min-h-0">
           {displayedTasks.length === 0 ? (
-            <EmptyState onCriarTarefa={handleCriarNovaTarefa} />
+            <div className="flex-1 flex justify-center items-center">
+              <EmptyState onCriarTarefa={handleCriarNovaTarefa} />
+            </div>
           ) : (
             // Lista de Tarefas
-            <div className="w-full">
+            <div className="w-full flex flex-col flex-1 min-h-0">
               {/* Botão Nova Tarefa */}
               <div className="border-b border-gray-100 pb-3 mb-2">
                 <button
@@ -327,8 +327,7 @@ const TarefasHoje = () => {
 
               {/* Lista de Tarefas com Scroll Vertical */}
               <div
-                className="flex-grow overflow-y-auto pr-2"
-                style={{ maxHeight: "420px" }}
+                className="flex-1 overflow-y-auto pr-2 min-h-0"
               >
                 {displayedTasks.map((tarefa) => (
                   <TaskItem

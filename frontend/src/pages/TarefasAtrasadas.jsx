@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import imagemFundo from "../components/imagem.jpg";
+import imagemFundo from "../assets/imagem.jpg";
 import { CirclePlus } from "lucide-react";
 
 const ICON_STROKE_COLOR = "#949798";
@@ -148,6 +148,41 @@ const listaInicialTarefas = [
     prazo: "15:00 - 20/10/2025",
     concluida: true,
   },
+  {
+    id: 11,
+    titulo: "Auditoria de Estoque",
+    description: "Verificar contagem física do depósito principal.",
+    prazo: "10:00 - 30/10/2025",
+    concluida: false,
+  },
+  {
+    id: 12,
+    titulo: "Auditoria de Estoque",
+    description: "Verificar contagem física do depósito principal.",
+    prazo: "10:00 - 30/10/2025",
+    concluida: false,
+  },
+  {
+    id: 13,
+    titulo: "Auditoria de Estoque",
+    description: "Verificar contagem física do depósito principal.",
+    prazo: "10:00 - 30/10/2025",
+    concluida: false,
+  },
+  {
+    id: 14,
+    titulo: "Auditoria de Estoque",
+    description: "Verificar contagem física do depósito principal.",
+    prazo: "10:00 - 30/10/2025",
+    concluida: false,
+  },
+  {
+    id: 15,
+    titulo: "Auditoria de Estoque",
+    description: "Verificar contagem física do depósito principal.",
+    prazo: "10:00 - 30/10/2025",
+    concluida: false,
+  }
 ];
 
 const PrazoLabel = ({ prazo }) => (
@@ -251,18 +286,15 @@ const TarefasAtrasadas = () => {
 
   return (
     <div
-      style={APP_BACKGROUND_STYLE}
-      className="p-8 font-poppins text-[#6B7280] flex justify-center items-center"
+      className="font-poppins text-[#6B7280] flex flex-col h-full"
     >
       {/* Bloco principal */}
       <div
         className={`
-          ${CUSTOM_BG_COLOR} rounded-[50px] p-8 w-full max-w-6xl shadow-xl backdrop-blur-sm bg-opacity-90 
-          min-h-[500px] flex flex-col
-        `}
+          ${CUSTOM_BG_COLOR} rounded-[50px] p-8 shadow-xl backdrop-blur-sm bg-opacity-90 flex-1 flex flex-col min-h-0`}
       >
         {/* Título e Contador */}
-        <div className="flex items-center mb-6">
+        <div className="flex items-center mb-6 flex-shrink-0">
           <h1 className="text-3xl font-bold text-gray-800 mr-3">Atrasadas</h1>
           <span
             className="text-base font-semibold px-3 py-1 rounded-full text-gray-800 border border-gray-300 bg-transparent cursor-pointer hover:bg-gray-100 transition"
@@ -275,16 +307,16 @@ const TarefasAtrasadas = () => {
 
         {/* CONTAINER PARA A BORDA DO CONTEÚDO */}
         <div
-          className="border border-[#949798] rounded-[25px] p-10 flex-grow flex flex-col"
-          style={{ minHeight: "450px" }}
+          className="border border-[#949798] rounded-[25px] p-10 flex-1 flex flex-col min-h-0"
+          //style={{ minHeight: "450px" }}
         >
           {displayedTasks.length === 0 ? (
-            <div className="flex-grow flex justify-center items-center">
+            <div className="flex-1 flex justify-center items-center">
               <EmptyStateAtrasadas />
             </div>
           ) : (
             // Lista de Tarefas
-            <div className="w-full flex flex-col flex-grow">
+            <div className="w-full flex flex-col flex-1 min-h-0">
               {/* Botão Nova Tarefa */}
               <div className="border-b border-gray-100 pb-3 mb-2 flex-shrink-0">
                 <button
@@ -306,8 +338,8 @@ const TarefasAtrasadas = () => {
 
               {/* Lista de Tarefas com Scroll Vertical */}
               <div
-                className="flex-grow overflow-y-auto pr-2"
-                style={{ maxHeight: "420px" }}
+                className="flex-1 overflow-y-auto pr-2 min-h-0"
+                //style={{ maxHeight: "420px" }}
               >
                 {displayedTasks.map((tarefa) => (
                   <TaskItem

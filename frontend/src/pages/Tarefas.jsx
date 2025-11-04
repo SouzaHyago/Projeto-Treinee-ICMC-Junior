@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import fundoImagem from "./imagem.jpg";
+import fundoImagem from "../assets/imagem.jpg";
 import {
   MoreHorizontal,
   Pencil,
@@ -339,12 +339,12 @@ export default function Tarefas() {
 
   return (
     <div
-      className="min-h-screen flex justify-center p-8 bg-cover bg-center font-poppins text-[#6B7280]"
-      style={{ backgroundImage: `url('${fundoImagem}')` }}
+      className="font-poppins text-[#6B7280] flex flex-col h-full"
+      //style={{ backgroundImage: `url('${fundoImagem}')` }}
     >
       {/* BLOCO PRINCIPAL: Raio 50px */}
       <div
-        className={`${CUSTOM_BG_COLOR} rounded-[50px] p-8 w-full max-w-6xl shadow-xl backdrop-blur-sm bg-opacity-90`}
+        className={`${CUSTOM_BG_COLOR} rounded-[50px] p-8 flex-1 flex flex-col h-full shadow-xl backdrop-blur-sm bg-opacity-90`}
       >
         {/* Topo: título */}
         <div className="mb-6">
@@ -354,7 +354,7 @@ export default function Tarefas() {
           </p>
         </div>
         <div
-          className={`border border-gray-300 rounded-[50px] ${CUSTOM_BG_COLOR} p-8`}
+          className={`border border-gray-300 rounded-[50px] ${CUSTOM_BG_COLOR} p-8 flex flex-col flex-1 min-h-0`}
         >
           {/* Ações e filtros */}
           <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
