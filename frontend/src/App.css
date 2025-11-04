@@ -65,3 +65,8 @@
 .auth-page {
   background-image: url('./assets/background.jpg');
 }
+
+.no-background {
+  background-image: none !important;
+  background-color: #F7FCFE; 
+}
