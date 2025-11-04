@@ -9,6 +9,7 @@ import TarefasConcluidas from "./pages/TarefasConcluidas"
 import Cadastro from "./pages/Cadastro/Cadastro"
 import Login from "./pages/Login/Login"
 import Configuracoes from "./pages/Configuracoes/Configuracoes"
+import Proximas from "./pages/TarefasProximas"
 function App() {
   const [userName, setUserName] = useState("Caio");
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -42,6 +43,7 @@ function AppContent({ userName, isAuthenticated }) {
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/login" element={<Login />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
+          <Route path="/proximas" element={<Proximas />} />
         </Routes>
       </main>
     </div>
