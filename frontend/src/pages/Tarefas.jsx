@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import fundoImagem from "../assets/imagem.jpg";
+import MainContainer from "../components/MainContainer.jsx";
+import EmptyStatePage from "../components/EmptyStatePage.jsx";
 import {
   MoreHorizontal,
   Pencil,
@@ -303,7 +305,11 @@ export default function Tarefas() {
 
   function corPrazo(prazo) {
     const dataPrazo = parsePrazoToDate(prazo, AGORA.getFullYear());
-    if (!dataPrazo) return "bg-gray-100 text-gray-500 border border-gray-200";
+    if (!dataPrazo)
+      return {
+      cor: "bg-gray-100 text-gray-500 border border-gray-200",
+      label: "sem prazo"
+    };
 
     const hojeData = new Date(
       AGORA.getFullYear(),
@@ -321,15 +327,27 @@ export default function Tarefas() {
 
     // Cores customizadas mantidas
     if (dataPrazo < AGORA)
-      return "bg-[#EFE999] text-[#726A4C] border border-[#DED581]";
+      return {
+        cor: "bg-[#EFE999] text-[#726A4C] border border-[#DED581]",
+        label: "Em atraso"
+      };
 
     if (dataPrazoDia.toDateString() === hojeData.toDateString())
-      return "bg-[#B5D1DB] text-[#4C6A72] border border-[#9CBAC3]";
+      return {
+        cor: "bg-[#B5D1DB] text-[#4C6A72] border border-[#9CBAC3]",
+        label: "Para hoje"
+      };
 
     if (dataPrazoDia.toDateString() === amanhaData.toDateString())
-      return "bg-[#D7B8D2] text-[#724C6A] border border-[#BFA0B9]";
+      return {
+        cor: "bg-[#D7B8D2] text-[#724C6A] border border-[#BFA0B9]",
+        label: "Para amanhã"
+      };
 
-    return "bg-[#C1E0C5] text-[#517255] border border-[#A8C7AD]";
+    return {
+      cor: "bg-[#C1E0C5] text-[#517255] border border-[#A8C7AD]",
+      label: "No prazo"
+    };
   }
 
   const handleAcao = (acao, tarefaId) => {
@@ -340,21 +358,20 @@ export default function Tarefas() {
   return (
     <div
       className="font-poppins text-[#6B7280] flex flex-col h-full"
-      //style={{ backgroundImage: `url('${fundoImagem}')` }}
     >
       {/* BLOCO PRINCIPAL: Raio 50px */}
       <div
         className={`${CUSTOM_BG_COLOR} rounded-[50px] p-8 flex-1 flex flex-col h-full shadow-xl backdrop-blur-sm bg-opacity-90`}
       >
         {/* Topo: título */}
-        <div className="mb-6">
+        <div className="mt-2 ml-4 mb-6">
           <h1 className="text-[36px] font-bold text-gray-800">Tarefas</h1>
           <p className="text-[15px] font-normal text-gray-500">
             Gerencie suas tarefas de forma simples e rápida.
           </p>
         </div>
         <div
-          className={`border border-gray-300 rounded-[50px] ${CUSTOM_BG_COLOR} p-8 flex flex-col flex-1 min-h-0`}
+          className={`border border-gray-500 rounded-[50px] ${CUSTOM_BG_COLOR} p-8 flex flex-col flex-1 min-h-0`}
         >
           {/* Ações e filtros */}
           <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
@@ -459,13 +476,17 @@ export default function Tarefas() {
 
                       {/* Conteúdo 2: Prazo (Cores Customizadas) */}
                       <td className="py-4 px-6 text-center border-r border-gray-300">
-                        <span
-                          className={`inline-block px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shadow-sm ${corPrazo(
-                            tarefa.prazo
-                          )}`}
-                        >
-                          {tarefa.prazo.split(" - ")[1]}
-                        </span>
+                        {(() => {
+                          const { cor, label } = corPrazo(tarefa.prazo);
+                          return (
+                            <span
+                              title={label} // Texto ao passar o cursor
+                              className={`inline-block px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shadow-sm ${cor}`}
+                            >
+                              {tarefa.prazo.split(" - ")[1]}
+                            </span>
+                          );
+                        })()}
                       </td>
 
                       {/* Última Célula (Ações) */}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import imagemFundo from "../assets/imagem.jpg";
 import { CirclePlus, AlertTriangle } from "lucide-react";
+import MainContainer from "../components/MainContainer";
+import EmptyStatePage from "../components/EmptyStatePage.jsx";
 
 const ICON_STROKE_COLOR = "#949798";
 const ICON_STROKE_STYLE = { color: ICON_STROKE_COLOR };
@@ -274,74 +276,52 @@ const TarefasHoje = () => {
   };
 
   return (
-    <div
-      className="font-poppins text-[#6B7280] flex-1 flex flex-col h-full"
+    <MainContainer
+      title="Hoje"
+      count={isEmptyDemo ? 0 : tarefasPendentesHoje.length}
+      onCountClick={() => setIsEmptyDemo(!isEmptyDemo)}
     >
-      {/* Bloco principal */}
-      <div
-        className={`
-          ${CUSTOM_BG_COLOR} rounded-[50px] p-8 shadow-xl backdrop-blur-sm bg-opacity-90 flex flex-1 flex-col min-h-0
-        `}
-      >
-        {/* Título e Contador (Contorno - FORMATO CÍRCULO/PÍLULA) */}
-        <div className="flex items-center mb-6 flex-shrink-0">
-          <h1 className="text-3xl font-bold text-gray-800 mr-3">Hoje</h1>
-          <span
-            // CLASSE CORRIGIDA: De volta para 'rounded-full'
-            className="text-base font-semibold px-3 py-1 rounded-full text-gray-800 border border-gray-300 bg-transparent cursor-pointer hover:bg-gray-100 transition"
-            onClick={() => setIsEmptyDemo(!isEmptyDemo)}
-            title="Clique para alternar entre preenchido e vazio (Empty State)"
+      {displayedTasks.length === 0 ? (
+        <EmptyStatePage text="Ainda não há nenhuma tarefa criada nesse período. Se quiser adicionar uma,
+          clique no botão abaixo." addButton={true} />
+      ) : (
+        // Lista de Tarefas
+        <div className="w-full flex flex-col flex-1 min-h-0">
+          {/* Botão Nova Tarefa */}
+          <div className="border-b border-gray-100 pb-3 mb-2">
+            <button
+              className={`
+                flex items-center w-full px-4 py-2 
+                // Borda corrigida para #949798
+                text-[#949798] bg-transparent border border-[#949798] 
+                rounded-lg shadow-sm hover:bg-gray-200 transition
+              `}
+              onClick={handleCriarNovaTarefa}
+            >
+              <CirclePlus
+                size={16}
+                style={ICON_STROKE_STYLE}
+                className="mr-2"
+              />
+              <span className="text-sm font-medium">Nova tarefa</span>
+            </button>
+          </div>
+
+          {/* Lista de Tarefas com Scroll Vertical */}
+          <div
+            className="flex-1 overflow-y-auto pr-2 min-h-0"
           >
-            {isEmptyDemo ? 0 : tarefasPendentesHoje.length}
-          </span>
-        </div>
-
-        {/* CONTAINER PARA A BORDA DO CONTEÚDO */}
-        <div className="border border-[#949798] rounded-[25px] p-10 flex-1 flex flex-col min-h-0">
-          {displayedTasks.length === 0 ? (
-            <div className="flex-1 flex justify-center items-center">
-              <EmptyState onCriarTarefa={handleCriarNovaTarefa} />
-            </div>
-          ) : (
-            // Lista de Tarefas
-            <div className="w-full flex flex-col flex-1 min-h-0">
-              {/* Botão Nova Tarefa */}
-              <div className="border-b border-gray-100 pb-3 mb-2">
-                <button
-                  className={`
-                    flex items-center w-full px-4 py-2 
-                    // Borda corrigida para #949798
-                    text-[#949798] bg-transparent border border-[#949798] 
-                    rounded-lg shadow-sm hover:bg-gray-200 transition
-                  `}
-                  onClick={handleCriarNovaTarefa}
-                >
-                  <CirclePlus
-                    size={16}
-                    style={ICON_STROKE_STYLE}
-                    className="mr-2"
-                  />
-                  <span className="text-sm font-medium">Nova tarefa</span>
-                </button>
-              </div>
-
-              {/* Lista de Tarefas com Scroll Vertical */}
-              <div
-                className="flex-1 overflow-y-auto pr-2 min-h-0"
-              >
-                {displayedTasks.map((tarefa) => (
-                  <TaskItem
-                    key={tarefa.id}
-                    tarefa={tarefa}
-                    onToggleConcluida={handleToggleConcluida}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
+            {displayedTasks.map((tarefa) => (
+              <TaskItem
+                key={tarefa.id}
+                tarefa={tarefa}
+                onToggleConcluida={handleToggleConcluida}
+              />
+            ))}
         </div>
       </div>
-    </div>
+    )}
+    </MainContainer>
   );
 };
 

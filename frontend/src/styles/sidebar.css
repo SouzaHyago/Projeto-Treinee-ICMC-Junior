@@ -1,7 +1,6 @@
 
 .sidebar {
   width: 350px;
-  background: #F7FCFE;
   padding: 2rem;
   border-radius: 50px;
   margin: 2rem;
@@ -33,16 +32,6 @@
   color: #333;
 }
 
-/* .search-box {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 50px;
-  border: 1px solid #ccc;
-  font-family: inherit;
-  background: #E3E7E9;
-  padding-left: 1rem;
-} */
-
 .search-box {
   position: relative;
   display: flex;
@@ -70,16 +59,6 @@
   background: #E3E7E9;
 }
 
-/* .search-box input {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 50px;
-  border: 1px solid #ccc;
-  font-family: inherit;
-  background: #E3E7E9;
-  padding-left: 1rem;
-} */
-
 .nav-section {
   margin-top: 1rem;
   flex-grow: 1;
@@ -89,7 +68,7 @@
 
 .nav-section h4 {
   display: flex;
-  /* justify-content: space-between; */
+  justify-content: space-between;
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
@@ -147,6 +126,22 @@
   padding: 0.1rem;
   font-size: 1.2rem;
   pointer-events: none;
+}
+
+.nav-section li.NovaTarefa {
+  display: flex;
+  border: 2px solid #dddee0;
+  border-radius: 20px;
+  background: #f8fefe;
+}
+
+.nav-section li.NovaTarefa:hover {
+  background: #e1e5e7;
+}
+
+.nav-section li.NovaTarefa.active {
+  color: #939596ff;
+  background: #e1e5e7;
 }
 
 .bottom-links {
