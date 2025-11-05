@@ -1,0 +1,75 @@
+.formCadastro {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 1.1rem;
+  width: 100%;
+  max-width: 35rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.subtitle {
+  margin-bottom: 1.5rem;
+}
+
+.formCadastro input {
+  border-radius: 10px;
+  border: solid 1px #C3BEBE;
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+  height: 2.25rem;
+  width: 100%;
+}
+
+.formCadastro .both {
+  display: flex;
+  gap: 1rem; 
+  width: 100%;
+}
+
+.formCadastro input[data-size="half"] {
+  flex: 1;              
+  min-width: 0;
+	width: 100%;
+}
+
+.formCadastro .halfsize {
+	width: 48%;
+}
+
+.formCadastro b {
+  color: #969696;
+}
+
+.formCadastro button {
+	border-radius: 10px;
+	width: 100%;
+	height: 2.25rem;
+	text-align: center;
+  color: #fff;
+  background: #40869E;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-bottom: 1.2rem;
+}
+
+.formCadastro button:hover {
+  background-color: #36778d;
+}
+
+@media (max-width: 768px) {
+  .formCadastro {
+    width: 90%;
+    margin: 1rem auto;
+  }
+
+  .formCadastro .both {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .formCadastro .halfsize {
+    width: 100%;
+  }
+}

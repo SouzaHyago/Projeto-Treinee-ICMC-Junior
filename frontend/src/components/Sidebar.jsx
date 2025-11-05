@@ -24,9 +24,9 @@ function Sidebar({ userName }) {
             <li className={location.pathname === '/' ? 'active' : ''}>
               <Link to="/"><FiGlobe />Página inicial</Link>
             </li>
-            {/* <li className={location.pathname === '/proximas' ? 'active' : ''}>
+            <li className={location.pathname === '/proximas' ? 'active' : ''}>
               <Link to="/proximas"><FiChevronsRight />Próximas</Link>
-            </li> */}
+            </li>
             <li className={location.pathname === '/hoje' ? 'active' : ''}>
               <Link to="/hoje"><FiList />Hoje</Link>
             </li>
