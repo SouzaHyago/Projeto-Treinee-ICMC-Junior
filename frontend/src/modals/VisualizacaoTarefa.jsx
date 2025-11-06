@@ -3,12 +3,12 @@ import Modal from "../components/Modal";
 function VisualizacaoTarefa({ tarefa, isOpen, onClose, onConfirm }) {
   return (
     <Modal
-      title={tarefa.title}
+      title={tarefa.titulo}
       message={
         <div className="space-y-2 text-left">
-          {tarefa.description && (
+          {tarefa.descricao && (
             <p>
-              <strong>Descrição:</strong> {tarefa.description}
+              <strong>Descrição:</strong> {tarefa.descricao}
             </p>
           )}
           {tarefa.prazo && (
@@ -24,9 +24,9 @@ function VisualizacaoTarefa({ tarefa, isOpen, onClose, onConfirm }) {
         </div>
       }
       isOpen={isOpen}
-      onClose={onClose}
-      onConfirm={onConfirm}
-      rButtonText="Okay"
+      onClose={onConfirm}
+      onConfirm={onClose}
+      rButtonText="Fechar"
       lButtonText="Editar"
       rButtonStyle="bg-[#40869E] hover:bg-[#006186]"
     />

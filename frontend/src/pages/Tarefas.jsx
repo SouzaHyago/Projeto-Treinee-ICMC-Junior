@@ -3,6 +3,7 @@ import EmptyStatePage from "../components/EmptyStatePage.jsx";
 import CriarTarefa from "./CriarTarefa.jsx";
 import EditarTarefa from "./EditarTarefa.jsx";
 import ExcluirTarefa from "../modals/ExcluirTarefa.jsx";
+import VisualizacaoTarefa from "../modals/VisualizacaoTarefa.jsx";
 import {
   MoreHorizontal,
   Pencil,
@@ -213,6 +214,7 @@ export default function Tarefas() {
   const [view, setView] = useState("lista");
   const [tarefaAtual, setTarefaAtual] = useState(null); // Tarefa sendo editada
   const [tarefaExcluir, setTarefaExcluir] = useState(null); // Tarefa sendo excluída
+  const [tarefaVisualizar, setTarefaVisualizar] = useState(null); // Tarefa sendo visualizada
   const [paginaAtual, setPaginaAtual] = useState(1);
   const tarefasPorPagina = 7;
   const indiceInicial = (paginaAtual - 1) * tarefasPorPagina;
@@ -333,7 +335,6 @@ export default function Tarefas() {
     const amanhaData = new Date(hojeData);
     amanhaData.setDate(hojeData.getDate() + 1);
 
-    // Cores customizadas mantidas
     if (dataPrazo < AGORA)
       return {
         cor: "bg-[#EFE999] text-[#726A4C] border border-[#DED581]",
@@ -384,7 +385,14 @@ export default function Tarefas() {
     setMenuAberto(null);
   };
 
-  // Gerenciamento de exclusão de uma tarefa
+  // Quando clicado 'Editar' na visualização
+  const handleEditarVisualizacao = () => {
+    if (tarefaVisualizar)
+      handleEditar(tarefaVisualizar.id); // Tarefa que será editada
+    setTarefaVisualizar(null);
+  };
+
+// Gerenciamento de exclusão de uma tarefa
   const handleExcluir = (tarefaId) => {
     setTarefaExcluir(tarefaId);
     setMenuAberto(null);
@@ -414,8 +422,19 @@ export default function Tarefas() {
     setTarefaAtual(null);
   };
 
+  const handleAbrirVisualizacao = (tarefa) => {
+    setTarefaVisualizar(tarefa);
+  };
+
+  const handleFecharVisualizacao = () => {
+    setTarefaVisualizar(null);
+  };
+
   const handleVisualizar = (tarefaId) => {
-    console.log("Visualizar tarefa:", tarefaId);
+    const tarefa = tarefas.find((t) => t.id === tarefaId);
+    if (tarefa) {
+      handleAbrirVisualizacao(tarefa);
+    }
     setMenuAberto(null);
   };
 
@@ -517,7 +536,8 @@ export default function Tarefas() {
                   return (
                     <tr
                       key={tarefa.id}
-                      className={`border-b border-gray-300 last:border-b-0 hover:bg-gray-100 transition ${CUSTOM_BG_COLOR}`}
+                      className={`border-b border-gray-300 last:border-b-0 hover:bg-gray-100 transition ${CUSTOM_BG_COLOR} cursor-pointer`}
+                      onClick={() => handleAbrirVisualizacao(tarefa)}
                     >
                       {/* Conteúdo 1: Descrição e Checkbox */}
                       <td className="py-4 px-6 border-r border-gray-300">
@@ -526,7 +546,8 @@ export default function Tarefas() {
                           <input
                             type="checkbox"
                             checked={tarefa.concluida}
-                            onChange={() => alternarConclusao(tarefa.id)}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => {e.stopPropagation(); alternarConclusao(tarefa.id)}}
                             className={`
                               mt-1 h-4 w-4 rounded-sm 
                               appearance-none cursor-pointer
@@ -579,7 +600,10 @@ export default function Tarefas() {
                         <button
                           // Armazena a ref no objeto menuRefs com o ID da tarefa
                           ref={(el) => (menuRefs.current[tarefa.id] = el)}
-                          onClick={() => toggleMenu(tarefa.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleMenu(tarefa.id)}
+                          }
                           className="p-1 rounded-full text-gray-500 hover:bg-gray-200 transition"
                         >
                           <MoreHorizontal size={18} />
@@ -681,6 +705,14 @@ export default function Tarefas() {
         onClose={cancelarExclusao}
         onConfirm={confirmarExclusao}
       />
+      {tarefaVisualizar && (
+        <VisualizacaoTarefa
+          tarefa={tarefaVisualizar}
+          isOpen={tarefaVisualizar !== null}
+          onClose={handleFecharVisualizacao} // Botão 'Fechar'
+          onConfirm={handleEditarVisualizacao} // Botão 'Editar'
+        />
+      )}
     </div>
   );
 }
