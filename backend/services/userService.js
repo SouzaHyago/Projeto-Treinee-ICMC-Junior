@@ -1,13 +1,16 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
+import validarCPF from "../utils/cpfValidator.js";
 
 export async function registerUser(dados) {
-
+  
   const { nome, email, cpf, dataNascimento, senha } = dados;
-
+  
   const existing = await User.findOne({ $or: [{ email }, { cpf }] });
   if (existing) throw new Error("Usuário já cadastrado");
+
+  if (!validarCPF(cpf)) throw new Error("CPF inválido");  
 
   const senhaHash = await bcrypt.hash(senha, 10);
 
@@ -24,12 +27,12 @@ export async function registerUser(dados) {
 
 export async function loginUser(dados) {
 
-  const {email, senha, active} = dados
+  const {email, senha, activate} = dados
   const user = await User.findOne({ email });
 
   if (!user) throw new Error("Usuário não encontrado");
 
-  if ((!user.ativo) && (!active)) throw new Error("Conta desativada");
+  if ((!user.ativo) && (!activate)) throw new Error("Conta desativada");
 
 
   const valid = await bcrypt.compare(senha, user.senhaHash);

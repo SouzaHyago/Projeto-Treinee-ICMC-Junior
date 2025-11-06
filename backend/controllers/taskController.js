@@ -1,6 +1,5 @@
 import { Task } from "../models/Task.js";
-import { complete } from "../services/taskService.js";
-import { createTaskService } from "../services/taskService.js"
+import { complete, create, findAndUpdateTask  } from "../services/taskService.js";
 
 export async function completeTask(req, res) {
   try {
@@ -13,7 +12,7 @@ export async function completeTask(req, res) {
 
 export async function createTask(req, res) {
   try {
-    const task = await createTaskService(req.body,req.userId);
+    const task = await create(req.body,req.userId);
     res.status(201).json(task);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -33,8 +32,8 @@ export async function listTasks(req, res) {
 
 export async function deleteTask(req, res) {
   try {
-    const { id } = req.params;
-    const deletedTask = await Task.findByIdAndDelete(id);
+    //const { id } = req.params;
+    const deletedTask = await Task.findByIdAndDelete(req.params.id);
 
     if (!deletedTask) {
       return res.status(404).json({ error: "Tarefa não encontrada" });
@@ -45,5 +44,14 @@ export async function deleteTask(req, res) {
     res
       .status(500)
       .json({ error: "Erro ao excluir tarefa", details: err.message });
+  }
+}
+
+export async function updateTask(req, res) {
+  try {
+    const task = await findAndUpdateTask(req.params.id, req.body, req.userId);
+    res.status(200).json(task);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao atualizar tarefa", details: err.message });
   }
 }
