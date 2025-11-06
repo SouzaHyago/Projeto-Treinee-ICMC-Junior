@@ -15,7 +15,7 @@ import Proximas from "./pages/TarefasProximas";
 
 function App() {
   const [userName, setUserName] = useState("Caio");
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <BrowserRouter>
@@ -39,7 +39,7 @@ function AppContent({ userName, setUserName, isAuthenticated, setIsAuthenticated
       <main className={isAuthPage ? "" : "main-content"}>
         <Routes>
           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path="/cadastro" element={<Cadastro />} />
+          <Route path="/cadastro" element={<Cadastro setIsAuthenticated={setIsAuthenticated}/>} />
 
           {isAuthenticated ? (
             <>

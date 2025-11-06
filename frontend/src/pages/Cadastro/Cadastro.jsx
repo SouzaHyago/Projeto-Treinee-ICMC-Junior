@@ -3,7 +3,7 @@ import background from '@/assets/background.png'
 import styles from './Cadastro.module.css'
 import FormCadastro from '@/components/FormCadastro'
 
-export default function Cadastro() {
+export default function Cadastro({ setIsAuthenticated }) {
   return (
     <div className={styles.container}>
       <div className={styles.logo}>
@@ -15,6 +15,7 @@ export default function Cadastro() {
           title="Comece Agora"
           subtitle = "Insira seus dados para criar uma conta" 
           cadastro={true}
+          setIsAuthenticated={setIsAuthenticated}
         />
       </div>
 
