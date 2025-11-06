@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import userRoutes from "./routes/userRoutes.js";
+import taskRutes from "./routes/taskRoutes.js"
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ mongoose
   .catch((err) => console.error("Erro ao conectar:", err));
 
 app.use("/users", userRoutes);
+app.use("/tasks", taskRutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor rodando com sucesso`));

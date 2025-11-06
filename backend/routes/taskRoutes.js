@@ -1,7 +1,7 @@
 import express from "express";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import {
-  createTask,
+  createTask
   listTasks,
   updateTask,
   deleteTask,
@@ -16,6 +16,6 @@ router.post("/", createTask);
 router.get("/", listTasks);
 router.put("/:id", updateTask);
 router.delete("/:id", deleteTask);
-router.patch("/:id/complete", completeTask);
+router.patch("/complete/:id", completeTask);
 
 export default router;
