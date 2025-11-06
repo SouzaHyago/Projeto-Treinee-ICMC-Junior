@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import fundoImagem from "../assets/imagem.jpg";
-import MainContainer from "../components/MainContainer.jsx";
 import EmptyStatePage from "../components/EmptyStatePage.jsx";
+import CriarTarefa from "./CriarTarefa.jsx";
+import EditarTarefa from "./EditarTarefa.jsx";
+import ExcluirTarefa from "../modals/ExcluirTarefa.jsx";
 import {
   MoreHorizontal,
   Pencil,
@@ -56,6 +57,7 @@ export default function Tarefas() {
         "Preparar pauta e slides para a reunião de kickoff do projeto X. Verificar agendas.",
       prazo: "09:00 - 01/11/2025",
       concluida: false,
+      obs: "Observar o tempo de apresentação para não ultrapassar 30 minutos.",
     },
     {
       id: 2,
@@ -208,6 +210,9 @@ export default function Tarefas() {
     [...listaInicial].sort(compararPorPrazo)
   );
 
+  const [view, setView] = useState("lista");
+  const [tarefaAtual, setTarefaAtual] = useState(null); // Tarefa sendo editada
+  const [tarefaExcluir, setTarefaExcluir] = useState(null); // Tarefa sendo excluída
   const [paginaAtual, setPaginaAtual] = useState(1);
   const tarefasPorPagina = 7;
   const indiceInicial = (paginaAtual - 1) * tarefasPorPagina;
@@ -233,10 +238,13 @@ export default function Tarefas() {
     if (buttonRef) {
       const rect = buttonRef.getBoundingClientRect();
 
-      const newTop = rect.bottom + window.scrollY - 30;
+      const container = document.querySelector('.main-content');
+      const containerRect = container ? container.getBoundingClientRect() : { left: 0, top: 0 };
+
+      const newTop = rect.bottom - containerRect.top + container.scrollTop - 30;
 
       const menuWidth = 210;
-      const newLeft = rect.right - menuWidth;
+      const newLeft = rect.right - containerRect.left - menuWidth - 40;
 
       setMenuPosicao({ top: newTop, left: newLeft });
     }
@@ -350,11 +358,87 @@ export default function Tarefas() {
     };
   }
 
-  const handleAcao = (acao, tarefaId) => {
-    console.log(`Ação: ${acao} na Tarefa ID: ${tarefaId}`);
+  const handleSalvarNovaTarefa = (tarefa) => {
+    setTarefas((prevTarefas) =>
+      [...prevTarefas, tarefa].sort(compararPorPrazo)
+    );
+    setView("lista"); // Volta para a lista
+  };
+
+  const handleSalvarEdicao = (tarefaAtualizada) => {
+    setTarefas((prevTarefas) =>
+      prevTarefas
+        .map((t) => (t.id === tarefaAtualizada.id ? tarefaAtualizada : t))
+        .sort(compararPorPrazo)
+    );
+    setView("lista"); // Volta para a lista
+    setTarefaAtual(null); // Limpa a tarefa atual
+  };
+
+  const handleEditar = (tarefaId) => {
+    const tarefa = tarefas.find((t) => t.id === tarefaId);
+    if (tarefa) {
+      setTarefaAtual(tarefa); // Tarefa que será editada
+      setView("editar"); // Muda a view para a de edição
+    }
     setMenuAberto(null);
   };
 
+  // Gerenciamento de exclusão de uma tarefa
+  const handleExcluir = (tarefaId) => {
+    setTarefaExcluir(tarefaId);
+    setMenuAberto(null);
+  };
+
+  const confirmarExclusao = () => {
+    if (tarefaExcluir) {
+      setTarefas((prevTarefas) =>
+        prevTarefas.filter((t) => t.id !== tarefaExcluir)
+    );
+      setTarefaExcluir(null);
+    }
+  };
+
+  const cancelarExclusao = () => {
+    setTarefaExcluir(null);
+  };
+
+  const handleCancelar = () => {
+    console.log("handleCancelar called - setting view to lista");
+    setView("lista");
+    setTarefaAtual(null);
+  };
+
+  const handleNovaTarefa = () => {
+    setView("criar");
+    setTarefaAtual(null);
+  };
+
+  const handleVisualizar = (tarefaId) => {
+    console.log("Visualizar tarefa:", tarefaId);
+    setMenuAberto(null);
+  };
+
+  if (view === "criar") {
+    return (
+      <CriarTarefa
+        onSave={handleSalvarNovaTarefa}
+        onCancel={handleCancelar}
+      />
+    );
+  }
+
+  if (view === "editar" && tarefaAtual) {
+    return (
+      <EditarTarefa
+        tarefa={tarefaAtual}
+        onSave={handleSalvarEdicao}
+        onCancel={handleCancelar}
+      />
+    );
+  }
+
+  // View "lista" (padrão)
   return (
     <div
       className="font-poppins text-[#6B7280] flex flex-col h-full"
@@ -371,13 +455,14 @@ export default function Tarefas() {
           </p>
         </div>
         <div
-          className={`border border-gray-500 rounded-[50px] ${CUSTOM_BG_COLOR} p-8 flex flex-col flex-1 min-h-0`}
+          className={`border border-gray-400 rounded-[50px] ${CUSTOM_BG_COLOR} p-8 flex flex-col flex-1 min-h-0`}
         >
           {/* Ações e filtros */}
           <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
             {/* Botão Nova Tarefa (ÍCONE: CirclePlus) */}
             <button
               className={`border border-gray-300 ${CUSTOM_BG_COLOR} text-gray-500 rounded-lg px-4 py-2 text-[14px] font-medium shadow-sm hover:bg-gray-200 transition flex items-center gap-2`}
+              onClick={handleNovaTarefa}
             >
               <CirclePlus size={16} style={ICON_STROKE_STYLE} />
               Nova Tarefa
@@ -512,7 +597,7 @@ export default function Tarefas() {
         {menuAberto !== null && (
           <div
             id={`menu-flutuante-${menuAberto}`}
-            className={`fixed border border-gray-200 rounded-lg shadow-2xl w-36 text-sm text-gray-700 z-50 overflow-hidden ${CUSTOM_BG_COLOR}`}
+            className={`absolute border border-gray-200 rounded-lg shadow-2xl w-36 text-sm text-gray-700 z-50 overflow-hidden ${CUSTOM_BG_COLOR}`}
             style={{
               top: menuPosicao.top,
               left: menuPosicao.left,
@@ -521,7 +606,7 @@ export default function Tarefas() {
             {tarefas.find((t) => t.id === menuAberto) && (
               <>
                 <button
-                  onClick={() => handleAcao("Editar", menuAberto)}
+                  onClick={() => handleEditar(menuAberto)}
                   className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 w-full text-left font-normal transition border-b border-gray-300 last:border-b-0"
                 >
                   <Pencil size={18} className="text-gray-600" />
@@ -529,7 +614,7 @@ export default function Tarefas() {
                 </button>
 
                 <button
-                  onClick={() => handleAcao("Visualizar", menuAberto)}
+                  onClick={() => handleVisualizar(menuAberto)}
                   className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 w-full text-left font-normal transition border-b border-gray-300 last:border-b-0"
                 >
                   <ExternalLink size={18} className="text-gray-600" />
@@ -537,7 +622,7 @@ export default function Tarefas() {
                 </button>
 
                 <button
-                  onClick={() => handleAcao("Excluir", menuAberto)}
+                  onClick={() => handleExcluir(menuAberto)}
                   className="flex items-center gap-3 px-3 py-2 hover:bg-red-50 w-full text-left font-normal text-gray-600 transition"
                 >
                   <Trash2 size={18} className="text-gray-600" />
@@ -591,6 +676,11 @@ export default function Tarefas() {
           </button>
         </div>
       </div>
+      <ExcluirTarefa 
+        isOpen={tarefaExcluir !== null}
+        onClose={cancelarExclusao}
+        onConfirm={confirmarExclusao}
+      />
     </div>
   );
 }

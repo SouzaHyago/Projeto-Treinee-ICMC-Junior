@@ -43,7 +43,7 @@ export default function MainContainer({
           </div>
         </div>
         {/* Borda do conteúdo */}
-        <div className={`rounded-[25px] p-10 flex-1 flex flex-col min-h-0 ${bordered ? "border border-[#949798]" : ""
+        <div className={`rounded-[25px] p-10 flex-1 flex flex-col min-h-0 ${bordered ? "border border-[#949798]" : "-mt-4"
           }`}>
           {children}
         </div>

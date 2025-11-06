@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from "react";
 import { CirclePlus, AlertTriangle } from "lucide-react";
+import MainContainer from "../components/MainContainer";
 
 const ICON_STROKE_COLOR = "#949798";
 const ICON_STROKE_STYLE = { color: ICON_STROKE_COLOR };
@@ -221,8 +221,12 @@ export default function TarefasProximas() {
     listaTarefasSemana.filter(t => !t.concluida).length;
 
   return (
-    <div className="font-poppins text-[#6B7280] flex flex-col h-full">
-      <div
+    <MainContainer
+      title="Próximas Tarefas"
+      count={totalTarefas}
+      bordered={false}
+    >
+      {/* <div
         className={`
           ${CUSTOM_BG_COLOR} rounded-[50px] p-8 shadow-xl backdrop-blur-sm bg-opacity-90 
           flex-1 flex flex-col min-h-0
@@ -235,7 +239,7 @@ export default function TarefasProximas() {
           >
             {totalTarefas}
           </span>
-        </div>
+        </div> */}
 
         
         <div className="flex-1 overflow-y-auto pr-2">
@@ -249,7 +253,7 @@ export default function TarefasProximas() {
           </div>
         </div>
         
-      </div>
-    </div>
+      {/* </div> */}
+    </MainContainer>
   );
 }

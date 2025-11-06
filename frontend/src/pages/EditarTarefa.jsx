@@ -3,10 +3,9 @@ import MainContainer from "../components/MainContainer";
 import FormEntry from "../components/FormEntry";
 import CancelarEdicao from "../modals/CancelarEdicao";
 
-function CriarTarefa({ onSave, onCancel }) {
-
+function EditarTarefa({ tarefa, onSave, onCancel }) {
   useEffect(() => {
-    document.title = "Criar Tarefa";
+    document.title = "Editar Tarefa";
   }, []);
 
   const [titulo, setTitulo] = useState("");
@@ -17,6 +16,24 @@ function CriarTarefa({ onSave, onCancel }) {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  useEffect(() => {
+    if (tarefa) {
+      setTitulo(tarefa.titulo);
+      setDescricao(tarefa.descricao);
+      setObs(tarefa.obs || "");
+
+      // Converte o prazo em data e horário
+      if (tarefa.prazo) {
+        const [horaStr, dataStr] = tarefa.prazo.split(" - ");
+        setHorario(horaStr || "");
+        setData(dataStr || "");
+      } else {
+        setHorario("");
+        setData("");
+      }
+    }
+  }, [tarefa]);
+
   function labelOpcional(label) {
     return (
       <>
@@ -26,20 +43,17 @@ function CriarTarefa({ onSave, onCancel }) {
   }
 
   function handleSave() {
-    // Converte data e horário no formato do prazo
     const prazo = data && horario ? `${horario} - ${data}` : "";
 
-    // Cria um objeto tarefa
-    const novaTarefa = {
-      id: Date.now(),
+    const tarefaAtualizada = {
+      ...tarefa,
       titulo,
       descricao,
       prazo,
-      concluida: false,
       obs,
     };
 
-    onSave(novaTarefa);
+    onSave(tarefaAtualizada);
   }
 
   function handleCancel() {
@@ -51,6 +65,7 @@ function CriarTarefa({ onSave, onCancel }) {
   }
 
   function handleConfirmCancel() {
+    console.log("Confirming cancel - should go back to list");
     onCancel();
     setIsModalOpen(false);
   }
@@ -58,8 +73,8 @@ function CriarTarefa({ onSave, onCancel }) {
   return (
     <>
     <MainContainer
-      title="Criar tarefa"
-      subtitle={"Preencha com a informação da sua tarefa."}
+      title="Editar tarefa"
+      subtitle={"Atualize a informação da tarefa."}
       bordered={false}
     >
       {/* Container do formulário */}
@@ -136,18 +151,18 @@ function CriarTarefa({ onSave, onCancel }) {
             `}
             onClick={handleSave}
           >
-            Salvar tarefa
+            Salvar alterações
           </button>
         </div>
       </div>
     </MainContainer>
     <CancelarEdicao
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={handleConfirmCancel}
-      />
-    </>
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      onConfirm={handleConfirmCancel}
+    />
+  </>
   );
 }
 
-export default CriarTarefa;
+export default EditarTarefa;
