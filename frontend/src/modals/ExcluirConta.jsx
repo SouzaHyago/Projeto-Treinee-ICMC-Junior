@@ -12,6 +12,7 @@ function ExcluirConta({ isOpen, onClose, onConfirm }) {
       rButtonStyle="bg-[#ADADAD] hover:bg-[#8E8E8E]"
       lButtonText="Excluir conta"
       lButtonStyle="bg-[#AE3232] hover:bg-[#7B2121]"
+      swappedButtons={true}
     />
   );
 }

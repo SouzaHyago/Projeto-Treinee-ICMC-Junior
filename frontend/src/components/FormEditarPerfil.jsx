@@ -1,5 +1,12 @@
+import { useState } from "react";
 
-export default function FormEditarPerfil() {
+export default function FormEditarPerfil({ onExcluirClick }) {
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleExcluirConta = () => {
+    onExcluirClick();
+  };
+
   return (
     <form className="bg-[#F7FCFE] rounded-2xl p-10 w-full max-w-lg shadow-sm border border-gray-200">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Editar Perfil</h2>
@@ -87,7 +94,9 @@ export default function FormEditarPerfil() {
       </div>
 
       
-      <p className="text-center text-sm text-gray-500 hover:text-red-600 cursor-pointer">
+      <p 
+        onClick={handleExcluirConta}
+        className="text-center text-sm text-gray-500 hover:text-red-600 cursor-pointer">
         Excluir minha conta
       </p>
     </form>

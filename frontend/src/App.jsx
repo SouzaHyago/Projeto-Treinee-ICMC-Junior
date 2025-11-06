@@ -47,7 +47,7 @@ function AppContent({ userName, setUserName, isAuthenticated, setIsAuthenticated
               <Route path="/hoje" element={<TarefasHoje />} />
               <Route path="/atrasadas" element={<TarefasAtrasadas />} />
               <Route path="/concluidas" element={<TarefasConcluidas />} />
-              <Route path="/configuracoes" element={<Configuracoes />} />
+              <Route path="/configuracoes" element={<Configuracoes setIsAuthenticated={setIsAuthenticated}/>} />
               <Route path="/proximas" element={<Proximas />} />
               <Route path="/criar-tarefa" element={<CriarTarefa />} />
               <Route path="/editar-tarefa" element={<EditarTarefa />} />

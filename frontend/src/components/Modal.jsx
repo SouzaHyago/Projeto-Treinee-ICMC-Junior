@@ -11,7 +11,8 @@ function Modal({
   lButtonText = "Cancelar",
   rButtonText,
   lButtonStyle = "bg-[#ADADAD] hover:bg-[#8E8E8E]",
-  rButtonStyle
+  rButtonStyle,
+  swappedButtons = false
 }) {
   if (!isOpen)
     return null;
@@ -33,7 +34,7 @@ function Modal({
 
           {/* Botão Esquerdo */}
           <button
-            onClick={onClose}
+            onClick={swappedButtons ? onConfirm : onClose}
             className={`${baseButtonStyle} ${lButtonStyle}`}
           >
             {lButtonText}
@@ -41,7 +42,7 @@ function Modal({
 
           {/* Botão Direito */}
           <button
-            onClick={onConfirm}
+            onClick={swappedButtons? onClose : onConfirm}
             className={`${baseButtonStyle} ${rButtonStyle}`}
           >
             {rButtonText}

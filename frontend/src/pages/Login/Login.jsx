@@ -3,7 +3,7 @@ import background from '@/assets/background.png'
 import styles from './Login.module.css'
 import FormLogin from '@/components/FormLogin'
 
-export default function Cadastro() {
+export default function Login() {
   return (
     <div className={styles.container}>
 

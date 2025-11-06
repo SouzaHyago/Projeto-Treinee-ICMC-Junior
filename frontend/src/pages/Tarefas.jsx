@@ -412,7 +412,6 @@ export default function Tarefas() {
   };
 
   const handleCancelar = () => {
-    console.log("handleCancelar called - setting view to lista");
     setView("lista");
     setTarefaAtual(null);
   };
