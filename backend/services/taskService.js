@@ -23,3 +23,13 @@ export async function complete(id) {
 export async function edit(id, updates) {
   return findAndUpdateTask(id, updates);
 }
+
+export async function createTaskService(dados,userId){
+
+    const task = await Task.create({
+        ...dados,
+        userId
+    })
+
+    return task;
+}
