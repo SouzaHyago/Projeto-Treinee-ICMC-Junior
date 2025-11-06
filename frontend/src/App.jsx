@@ -35,7 +35,7 @@ function AppContent({ userName, setUserName, isAuthenticated, setIsAuthenticated
 
   return (
     <div className={isAuthPage ? "" : "app-container"}>
-      {!isAuthPage && <Sidebar userName={userName} />}
+      {!isAuthPage && <Sidebar userName={userName} setIsAuthenticated={setIsAuthenticated}/>}
       <main className={isAuthPage ? "" : "main-content"}>
         <Routes>
           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
