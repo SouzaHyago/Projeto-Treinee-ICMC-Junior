@@ -1,4 +1,4 @@
-function TextBox({ placeholder, value, onChange, multiline=false, className="" }) {
+function TextBox({ placeholder, type="text", value, onChange, multiline=false, className="" }) {
   if (multiline) {
     return (
       <textarea
@@ -12,7 +12,7 @@ function TextBox({ placeholder, value, onChange, multiline=false, className="" }
   }
   return (
     <input
-      type="text"
+      type={type}
       placeholder={placeholder}
       value={value}
       onChange={onChange}

@@ -43,6 +43,7 @@ export default function FormCadastro({ title, subtitle, cadastro, setIsAuthentic
               className={styles.input}
             />
           </div>
+          
         </div>
 
         {/* Email */}

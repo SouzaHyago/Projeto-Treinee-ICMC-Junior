@@ -27,7 +27,8 @@ function CriarTarefa({ onSave, onCancel }) {
 
   function handleSave() {
     // Converte data e horário no formato do prazo
-    const prazo = data && horario ? `${horario} - ${data}` : "";
+    const fdata = data.replaceAll("-", "/"); // Converte para AAAA/MM/DD
+    const prazo = data && horario ? `${horario} - ${fdata}` : "";
 
     // Cria um objeto tarefa
     const novaTarefa = {
@@ -86,7 +87,7 @@ function CriarTarefa({ onSave, onCancel }) {
             <div className="flex-1">
               <FormEntry
                 label="Data"
-                placeholder="DD/MM/AAAA"
+                type="date"
                 value={data}
                 onChange={(e) => setData(e.target.value)}
               />
@@ -94,7 +95,7 @@ function CriarTarefa({ onSave, onCancel }) {
             <div className="flex-1">
               <FormEntry
                 label="Horário"
-                placeholder="HH:MM"
+                type="time"
                 value={horario}
                 onChange={(e) => setHorario(e.target.value)}
               />

@@ -101,6 +101,7 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
             <div className="flex-1">
               <FormEntry
                 label="Data"
+                type="date"
                 placeholder="DD/MM/AAAA"
                 value={data}
                 onChange={(e) => setData(e.target.value)}
@@ -109,6 +110,7 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
             <div className="flex-1">
               <FormEntry
                 label="Horário"
+                type="time"
                 placeholder="HH:MM"
                 value={horario}
                 onChange={(e) => setHorario(e.target.value)}

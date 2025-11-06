@@ -1,6 +1,6 @@
 import Textbox from "./Textbox"
 
-function FormEntry({ label, mandatory=true, placeholder, value, onChange, multiline=false, inputClass="" }) {
+function FormEntry({ label, type, mandatory=true, placeholder, value, onChange, multiline=false, inputClass="" }) {
   return (
     <div className="flex flex-col mb-4">
       <label className="mb-1.5 text-base font-medium text-gray-700 flex items-center gap-1">
@@ -9,6 +9,7 @@ function FormEntry({ label, mandatory=true, placeholder, value, onChange, multil
       </label>
       <Textbox
         placeholder={placeholder}
+        type={type}
         value={value}
         onChange={onChange}
         className={inputClass}
