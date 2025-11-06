@@ -230,6 +230,14 @@ export default function Tarefas() {
   const menuRefs = useRef({});
 
   useEffect(() => {
+    const timer = setInterval(() => {
+      setHoraAtual(new Date());
+    }, 60000); // 1 minuto
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
     // Define o novo título da página
     document.title = "Página Inicial";
   }, []);
