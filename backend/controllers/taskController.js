@@ -32,11 +32,13 @@ export async function listTasks(req, res) {
 
 export async function deleteTask(req, res) {
   try {
-    //const { id } = req.params;
-    const deletedTask = await Task.findByIdAndDelete(req.params.id);
+    const deletedTask = await Task.findOneAndDelete({ 
+      _id: req.params.id, 
+      userId: req.userId 
+    });
 
     if (!deletedTask) {
-      return res.status(404).json({ error: "Tarefa não encontrada" });
+      return res.status(404).json({ error: "Tarefa não encontrada ou não pertence ao usuário" });
     }
 
     res.status(200).json({ message: "Tarefa excluída com sucesso" });

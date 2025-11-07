@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; 
 import MainContainer from "../components/MainContainer";
 import FormEntry from "../components/FormEntry";
 import CancelarEdicao from "../modals/CancelarEdicao";
+import api from "@/api.js";
 
-function CriarTarefa({ onSave, onCancel }) {
-
+function CriarTarefa({ onSave, onCancel }) { 
+  
+  const navigate = useNavigate(); 
+  
   useEffect(() => {
     document.title = "Criar Tarefa";
   }, []);
@@ -14,7 +18,6 @@ function CriarTarefa({ onSave, onCancel }) {
   const [data, setData] = useState("");
   const [horario, setHorario] = useState("");
   const [obs, setObs] = useState("");
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   function labelOpcional(label) {
@@ -25,34 +28,49 @@ function CriarTarefa({ onSave, onCancel }) {
     );
   }
 
-  function handleSave() {
-    // Converte data e horário no formato do prazo
-    const fdata = data.replaceAll("-", "/"); // Converte para AAAA/MM/DD
-    const prazo = data && horario ? `${horario} - ${fdata}` : "";
+  async function handleSave() {
+    if (!titulo || !data || !horario) {
+      alert("Por favor, preencha o nome da tarefa, data e horário.");
+      return;
+    }
+    const prazoISO = `${data}T${horario}:00`;
+    const novaTarefaData = { titulo, descricao, prazo: prazoISO, obs };
 
-    // Cria um objeto tarefa
-    const novaTarefa = {
-      id: Date.now(),
-      titulo,
-      descricao,
-      prazo,
-      concluida: false,
-      obs,
-    };
+    try {
+      const res = await api.post("/tasks", novaTarefaData);
 
-    onSave(novaTarefa);
+      if (typeof onSave === "function") {
+        onSave(res.data); 
+      } else {
+        navigate("/pagina-inicial"); 
+      }
+
+    } catch (error) {
+      console.error("Erro ao criar tarefa:", error);
+      alert("Erro ao salvar a tarefa: " + (error.response?.data?.error || "Erro desconhecido"));
+    }
   }
 
   function handleCancel() {
-    // Abre o modal se algum compo foi preenchido
-    if (titulo || descricao || data || horario || obs) {
-      setIsModalOpen(true);
-    } else
-      onCancel();
+    if (typeof onCancel === "function") {
+      // Abre o modal se algum campo foi preenchido
+      if (titulo || descricao || data || horario || obs) {
+        setIsModalOpen(true);
+      } else {
+        onCancel();
+      }
+    } else {
+      // Se não, apenas navega
+      navigate("/pagina-inicial");
+    }
   }
 
   function handleConfirmCancel() {
-    onCancel();
+    if (typeof onCancel === "function") {
+      onCancel();
+    } else {
+      navigate("/pagina-inicial");
+    }
     setIsModalOpen(false);
   }
 

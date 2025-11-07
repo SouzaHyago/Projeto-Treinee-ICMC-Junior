@@ -1,9 +1,26 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import MainContainer from "../components/MainContainer";
 import FormEntry from "../components/FormEntry";
 import CancelarEdicao from "../modals/CancelarEdicao";
+import api from "@/api.js";
 
-function EditarTarefa({ tarefa, onSave, onCancel }) {
+const formatarDataParaInput = (data) => {
+  const dia = String(data.getDate()).padStart(2, '0');
+  const mes = String(data.getMonth() + 1).padStart(2, '0');
+  const ano = data.getFullYear();
+  return `${ano}-${mes}-${dia}`;
+};
+
+const formatarHorarioParaInput = (data) => {
+  const horas = String(data.getHours()).padStart(2, '0');
+  const minutos = String(data.getMinutes()).padStart(2, '0');
+  return `${horas}:${minutos}`;
+};
+
+function EditarTarefa({ tarefa, onSave, onCancel }) { 
+  const navigate = useNavigate(); 
+
   useEffect(() => {
     document.title = "Editar Tarefa";
   }, []);
@@ -18,21 +35,20 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
 
   useEffect(() => {
     if (tarefa) {
-      setTitulo(tarefa.titulo);
-      setDescricao(tarefa.descricao);
+      setTitulo(tarefa.titulo || "");
+      setDescricao(tarefa.descricao || "");
       setObs(tarefa.obs || "");
 
-      // Converte o prazo em data e horário
       if (tarefa.prazo) {
-        const [horaStr, dataStr] = tarefa.prazo.split(" - ");
-        setHorario(horaStr || "");
-        setData(dataStr || "");
-      } else {
-        setHorario("");
-        setData("");
+        const dataPrazo = new Date(tarefa.prazo);
+        setData(formatarDataParaInput(dataPrazo));
+        setHorario(formatarHorarioParaInput(dataPrazo));
       }
+    } else {
+      console.warn("Nenhuma tarefa para editar. Redirecionando.");
+      navigate("/pagina-inicial");
     }
-  }, [tarefa]);
+  }, [tarefa, navigate]); 
 
   function labelOpcional(label) {
     return (
@@ -42,39 +58,53 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
     );
   }
 
-  function handleSave() {
-    const prazo = data && horario ? `${horario} - ${data}` : "";
+  async function handleSave() {
+    
+    if (!titulo || !data || !horario) {
+      alert("Por favor, preencha o nome da tarefa, data e horário.");
+      return;
+    }
 
-    const tarefaAtualizada = {
-      ...tarefa,
-      titulo,
-      descricao,
-      prazo,
-      obs,
-    };
+    const prazoISO = `${data}T${horario}:00`;
+    const dadosAtualizados = { titulo, descricao, prazo: prazoISO, obs };
 
-    onSave(tarefaAtualizada);
+    try {
+      const res = await api.put(`/tasks/${tarefa._id}`, dadosAtualizados);
+
+      if (typeof onSave === "function") {
+        onSave(res.data);
+      } else {
+        navigate("/pagina-inicial");
+      }
+
+    } catch (error) {
+      console.error("Erro ao atualizar tarefa:", error);
+      alert("Erro ao salvar a tarefa: " + (error.response?.data?.error || "Erro desconhecido"));
+    }
   }
 
   function handleCancel() {
-    // Abre o modal se algum compo foi preenchido
-    if (titulo || descricao || data || horario || obs) {
-      setIsModalOpen(true);
-    } else
-      onCancel();
+    setIsModalOpen(true);
   }
 
   function handleConfirmCancel() {
-    console.log("Confirming cancel - should go back to list");
-    onCancel();
+    if (typeof onCancel === "function") {
+      onCancel();
+    } else {
+      navigate("/pagina-inicial");
+    }
     setIsModalOpen(false);
+  }
+
+  if (!tarefa) {
+    return <div>Carregando...</div>; 
   }
 
   return (
     <>
     <MainContainer
-      title="Editar tarefa"
-      subtitle={"Atualize a informação da tarefa."}
+      title="Editar tarefa" 
+      subtitle={"Atualize a informação da sua tarefa."}
       bordered={false}
     >
       {/* Container do formulário */}
@@ -102,7 +132,6 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
               <FormEntry
                 label="Data"
                 type="date"
-                placeholder="DD/MM/AAAA"
                 value={data}
                 onChange={(e) => setData(e.target.value)}
               />
@@ -111,7 +140,6 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
               <FormEntry
                 label="Horário"
                 type="time"
-                placeholder="HH:MM"
                 value={horario}
                 onChange={(e) => setHorario(e.target.value)}
               />
@@ -153,17 +181,17 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
             `}
             onClick={handleSave}
           >
-            Salvar alterações
+            Salvar alterações 
           </button>
         </div>
       </div>
     </MainContainer>
     <CancelarEdicao
-      isOpen={isModalOpen}
-      onClose={() => setIsModalOpen(false)}
-      onConfirm={handleConfirmCancel}
-    />
-  </>
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmCancel}
+      />
+    </>
   );
 }
 

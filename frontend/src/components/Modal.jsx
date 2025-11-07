@@ -1,4 +1,3 @@
-import React from "react";
 
 const baseButtonStyle = "text-white px-4 py-2.5 font-medium rounded-full transition shadow-sm min-w-[180px]";
 
@@ -21,14 +20,14 @@ function Modal({
     <div onClick={onClose} className="fixed inset-0 bg-black bg-opacity-55 flex justify-center 
                                       items-center z-50 backdrop-blur-sm">
       <div onClick={(e) => e.stopPropagation()} 
-           className="bg-white rounded-2xl shadow-xl w-full max-w-md p-12 text-center m-4">
-        <h2 className="text-2xl font-medium text-gray-900">
+          className="bg-white rounded-2xl shadow-xl w-full max-w-md p-12 m-4">
+          <h2 className="text-2xl font-medium text-gray-900 text-center">
           {title}
         </h2>
 
-        <p className="mt-4 text-base text-gray-600">
+        <div className="mt-4 text-base text-gray-600 max-h-80 overflow-y-auto">
           {message}
-        </p>
+        </div>
 
         <div className="mt-8 flex justify-between">
 
