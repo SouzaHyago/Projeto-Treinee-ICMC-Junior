@@ -1,9 +1,9 @@
 import { Task } from "../models/Task.js";
-import { complete, create, findAndUpdateTask  } from "../services/taskService.js";
+import { complete, create, findAndUpdateTask, list  } from "../services/taskService.js";
 
 export async function completeTask(req, res) {
   try {
-    const task = await complete(req.params.id);
+    const task = await complete(req.params.id, req.userId);
     res.status(200).json(task);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -21,7 +21,7 @@ export async function createTask(req, res) {
 
 export async function listTasks(req, res) {
   try {
-    const tasks = await Task.find();
+    const tasks = await list(req.userId);
     res.status(200).json(tasks);
   } catch (err) {
     res
