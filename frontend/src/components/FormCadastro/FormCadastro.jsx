@@ -3,6 +3,7 @@ import styles from './FormCadastro.module.css'
 import FormEntry from '../../components/FormEntry'
 import api from "@/api"
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 export default function FormCadastro({ title, subtitle, cadastro }) {
   const navigate = useNavigate();
@@ -25,11 +26,12 @@ export default function FormCadastro({ title, subtitle, cadastro }) {
       });
 
       console.log("Usuário cadastrado:", response.data);
-
+      toast.success("Cadastro realizado com sucesso!"); 
       navigate("/login");
     } catch (error) {
       console.error("Erro ao cadastrar:", error);
-      alert(error?.response?.data?.message || "Erro ao cadastrar.");
+
+      toast.error(error?.response?.data?.message || "Erro ao cadastrar.");
     }
   }
 

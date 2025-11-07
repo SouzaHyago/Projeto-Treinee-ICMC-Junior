@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import FormEntry from "@/components/FormEntry";
 import styles from "../FormLogin/FormLogin.module.css";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from 'react-toastify';
 
 export default function FormLogin() {
 	const pronouns = ["o", "a", "e"];
@@ -21,7 +22,7 @@ async function handleSubmit(e) {
     await login(emailCpf, senha);  
     navigate("/");     
   } catch (err) {
-    alert(err.message);
+    toast.error(err.response?.data?.error || err.message || "Erro ao fazer login.");
   }
 }
 

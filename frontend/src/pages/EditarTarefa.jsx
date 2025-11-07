@@ -4,6 +4,7 @@ import MainContainer from "../components/MainContainer";
 import FormEntry from "../components/FormEntry";
 import CancelarEdicao from "../modals/CancelarEdicao";
 import api from "@/api.js";
+import { toast } from 'react-toastify';
 
 const formatarDataParaInput = (data) => {
   const dia = String(data.getDate()).padStart(2, '0');
@@ -61,7 +62,7 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
   async function handleSave() {
     
     if (!titulo || !data || !horario) {
-      alert("Por favor, preencha o nome da tarefa, data e horário.");
+      toast.warn("Por favor, preencha o nome da tarefa, data e horário."); 
       return;
     }
 
@@ -70,6 +71,8 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
 
     try {
       const res = await api.put(`/tasks/${tarefa._id}`, dadosAtualizados);
+      
+      toast.success("Tarefa atualizada com sucesso!");
 
       if (typeof onSave === "function") {
         onSave(res.data);
@@ -79,7 +82,8 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
 
     } catch (error) {
       console.error("Erro ao atualizar tarefa:", error);
-      alert("Erro ao salvar a tarefa: " + (error.response?.data?.error || "Erro desconhecido"));
+      
+      toast.error("Erro ao salvar a tarefa: " + (error.response?.data?.error || "Erro desconhecido"));
     }
   }
 

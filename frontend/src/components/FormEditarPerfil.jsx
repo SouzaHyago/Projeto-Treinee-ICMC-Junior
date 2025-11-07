@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import api from "@/api";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from 'react-toastify';
 const formatarDataParaInput = (isoDate) => {
   if (!isoDate) return "";
   try {
@@ -59,11 +59,11 @@ export default function FormEditarPerfil({ currentUser, onExcluirClick }) {
     let senhaFoiAlterada = false;
     if (novaSenha) {
       if (!novaSenha) {
-        alert("Por favor, digite a nova senha.");
+        
         return;
       }
       if (novaSenha !== confirmarSenha) {
-        alert("As novas senhas não coincidem.");
+        toast.warn("As novas senhas não coincidem."); 
         return;
       }
       
@@ -73,7 +73,7 @@ export default function FormEditarPerfil({ currentUser, onExcluirClick }) {
     }
 
     if (Object.keys(updates).length === 0) {
-      alert("Nenhuma mudança detectada.");
+      toast.info("Nenhuma mudança detectada."); 
       return;
     }
 
@@ -82,10 +82,10 @@ export default function FormEditarPerfil({ currentUser, onExcluirClick }) {
       
       updateUserContext(res.data);
       
-      alert("Perfil atualizado com sucesso!");
+      toast.success("Perfil atualizado com sucesso!"); 
 
       if (senhaFoiAlterada) {
-        alert("Sua senha foi alterada. Por favor, faça login novamente.");
+        toast.info("Sua senha foi alterada. Por favor, faça login novamente."); 
         logout();
         navigate("/login");
       } else {
@@ -96,7 +96,7 @@ export default function FormEditarPerfil({ currentUser, onExcluirClick }) {
 
     } catch (err) {
       console.error("Erro ao atualizar perfil:", err);
-      alert("Erro ao atualizar perfil: " + (err.response?.data?.error || "Erro desconhecido"));
+       toast.error("Erro ao atualizar perfil: " + (err.response?.data?.error || "Erro desconhecido"));
     }
   };
 

@@ -3,6 +3,7 @@ import FormEditarPerfil from '@/components/FormEditarPerfil';
 import ExcluirConta from '../../modals/ExcluirConta';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/api';
+import { toast } from 'react-toastify';
 
 export default function Configuracoes() {
   const CUSTOM_BG_COLOR = "bg-[#F7FCFE]";
@@ -14,11 +15,11 @@ export default function Configuracoes() {
     try {
       await api.patch("/users/profile"); 
       setOpenModal(false);
-      alert("Conta excluída com sucesso.");
+      toast.success("Conta excluída com sucesso.");
       logout(); 
     } catch (error) {
       console.error("Erro ao excluir conta:", error);
-      alert("Não foi possível excluir sua conta. Tente novamente.");
+      toast.error("Não foi possível excluir sua conta. Tente novamente.");
     }
   };
 

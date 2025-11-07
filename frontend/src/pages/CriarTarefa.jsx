@@ -1,9 +1,11 @@
+// frontend/src/pages/CriarTarefa.jsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; 
 import MainContainer from "../components/MainContainer";
 import FormEntry from "../components/FormEntry";
 import CancelarEdicao from "../modals/CancelarEdicao";
 import api from "@/api.js";
+import { toast } from 'react-toastify';
 
 function CriarTarefa({ onSave, onCancel }) { 
   
@@ -30,7 +32,7 @@ function CriarTarefa({ onSave, onCancel }) {
 
   async function handleSave() {
     if (!titulo || !data || !horario) {
-      alert("Por favor, preencha o nome da tarefa, data e horário.");
+      toast.warn("Por favor, preencha o nome da tarefa, data e horário."); 
       return;
     }
     const prazoISO = `${data}T${horario}:00`;
@@ -38,6 +40,8 @@ function CriarTarefa({ onSave, onCancel }) {
 
     try {
       const res = await api.post("/tasks", novaTarefaData);
+
+      toast.success("Tarefa criada com sucesso!");
 
       if (typeof onSave === "function") {
         onSave(res.data); 
@@ -47,20 +51,19 @@ function CriarTarefa({ onSave, onCancel }) {
 
     } catch (error) {
       console.error("Erro ao criar tarefa:", error);
-      alert("Erro ao salvar a tarefa: " + (error.response?.data?.error || "Erro desconhecido"));
+      
+      toast.error("Erro ao salvar a tarefa: " + (error.response?.data?.error || "Erro desconhecido"));
     }
   }
 
   function handleCancel() {
     if (typeof onCancel === "function") {
-      // Abre o modal se algum campo foi preenchido
       if (titulo || descricao || data || horario || obs) {
         setIsModalOpen(true);
       } else {
         onCancel();
       }
     } else {
-      // Se não, apenas navega
       navigate("/pagina-inicial");
     }
   }
