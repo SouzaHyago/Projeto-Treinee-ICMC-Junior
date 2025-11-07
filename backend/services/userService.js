@@ -27,8 +27,10 @@ export async function registerUser(dados) {
 
 export async function loginUser(dados) {
 
-  const {email, senha, activate} = dados
-  const user = await User.findOne({ email });
+  const { emailCpf, senha, activate } = dados;
+  const user = await User.findOne({
+    $or: [{ email: emailCpf }, { cpf: emailCpf }]
+  });
 
   if (!user) throw new Error("Usuário não encontrado");
 
