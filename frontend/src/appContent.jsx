@@ -18,15 +18,24 @@ import PublicRoute from "./routes/publicRoute";
 import './App.css';
 
 export default function AppContent() {
-  const { logout } = useAuth();
+  // Obtenha 'user' e 'isAuthenticated' do contexto
+  const { logout, user, isAuthenticated } = useAuth();
   const location = useLocation();
 
-  // Define se estamos em uma página de autenticação para esconder a Sidebar
+  const firstName = user?.nome ? user.nome.split(' ')[0] : '';
+
   const isAuthPage = ["/login", "/cadastro"].includes(location.pathname);
 
   return (
     <div className={isAuthPage ? "" : "app-container"}>
-      {!isAuthPage && <Sidebar logout={logout} />}
+      
+      {/* Renderize o Sidebar apenas se NÃO for uma página de auth
+        E o usuário ESTIVER autenticado.
+        Passe 'firstName' para a prop 'userName'.
+      */}
+      {!isAuthPage && isAuthenticated && (
+        <Sidebar userName={firstName} logout={logout} />
+      )}
 
       <main className={isAuthPage ? "" : "main-content"}>
         <Routes>

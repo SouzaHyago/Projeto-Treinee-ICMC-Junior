@@ -1,16 +1,111 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
+import api from "@/api";
+import { useNavigate } from "react-router-dom";
 
-export default function FormEditarPerfil({ onExcluirClick }) {
-  const [openModal, setOpenModal] = useState(false);
+const formatarDataParaInput = (isoDate) => {
+  if (!isoDate) return "";
+  try {
+    return new Date(isoDate).toISOString().split('T')[0];
+  } catch (error) {
+    return "";
+  }
+};
 
-  const handleExcluirConta = () => {
-    onExcluirClick();
+export default function FormEditarPerfil({ currentUser, onExcluirClick }) {
+  const { updateUserContext, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const [nome, setNome] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
+  const [email, setEmail] = useState("");
+  const [novaSenha, setNovaSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
+
+  useEffect(() => {
+    if (currentUser) {
+      setNome(currentUser.nome || "");
+      setCpf(currentUser.cpf || "");
+      setEmail(currentUser.email || "");
+      setDataNascimento(formatarDataParaInput(currentUser.dataNascimento));
+    }
+  }, [currentUser]);
+
+  const handleCancel = () => {
+    if (currentUser) {
+      setNome(currentUser.nome || "");
+      setCpf(currentUser.cpf || "");
+      setEmail(currentUser.email || "");
+      setDataNascimento(formatarDataParaInput(currentUser.dataNascimento));
+      setNovaSenha("");
+      setConfirmarSenha("");
+    }
+    
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const updates = {};
+
+    if (nome !== currentUser.nome) updates.nome = nome;
+    if (email !== currentUser.email) updates.email = email;
+    if (cpf !== currentUser.cpf) updates.cpf = cpf;
+    if (dataNascimento !== formatarDataParaInput(currentUser.dataNascimento)) {
+      updates.dataNascimento = dataNascimento;
+    }
+
+    let senhaFoiAlterada = false;
+    if (novaSenha) {
+      if (!novaSenha) {
+        alert("Por favor, digite a nova senha.");
+        return;
+      }
+      if (novaSenha !== confirmarSenha) {
+        alert("As novas senhas não coincidem.");
+        return;
+      }
+      
+      
+      updates.senha = novaSenha;
+      senhaFoiAlterada = true;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      alert("Nenhuma mudança detectada.");
+      return;
+    }
+
+    try {
+      const res = await api.put("/users/profile", updates);
+      
+      updateUserContext(res.data);
+      
+      alert("Perfil atualizado com sucesso!");
+
+      if (senhaFoiAlterada) {
+        alert("Sua senha foi alterada. Por favor, faça login novamente.");
+        logout();
+        navigate("/login");
+      } else {
+        setNovaSenha("");
+        setConfirmarSenha("");
+      }
+      navigate("/");
+
+    } catch (err) {
+      console.error("Erro ao atualizar perfil:", err);
+      alert("Erro ao atualizar perfil: " + (err.response?.data?.error || "Erro desconhecido"));
+    }
   };
 
   return (
-    <form className="bg-[#F7FCFE] rounded-2xl p-10 w-full max-w-lg shadow-sm border border-gray-200">
+    <form 
+      onSubmit={handleSubmit}
+      className="bg-[#F7FCFE] rounded-2xl p-10 w-full max-w-lg shadow-sm border border-gray-200"
+    >
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Editar Perfil</h2>
-
 
       <div className="mb-4">
         <label className="block text-gray-700 mb-1">Nome</label>
@@ -18,6 +113,8 @@ export default function FormEditarPerfil({ onExcluirClick }) {
           type="text"
           placeholder="Digite seu nome"
           className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
         />
       </div>
 
@@ -28,6 +125,8 @@ export default function FormEditarPerfil({ onExcluirClick }) {
             type="text"
             placeholder="123.456.789-10"
             className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            value={cpf}
+            onChange={(e) => setCpf(e.target.value)}
           />
         </div>
         <div className="flex-1">
@@ -35,6 +134,8 @@ export default function FormEditarPerfil({ onExcluirClick }) {
           <input
             type="date"
             className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            value={dataNascimento}
+            onChange={(e) => setDataNascimento(e.target.value)}
           />
         </div>
       </div>
@@ -45,38 +146,32 @@ export default function FormEditarPerfil({ onExcluirClick }) {
           type="email"
           placeholder="ana@email.com"
           className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 mb-1">Senha atual</label>
-        <input
-          type="password"
-          placeholder="Digite sua senha atual"
-          className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
-        />
-      </div>
-
-      
       <div className="mb-4">
         <label className="block text-gray-700 mb-1">Nova senha</label>
         <input
           type="password"
           placeholder="Digite a nova senha"
           className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          value={novaSenha}
+          onChange={(e) => setNovaSenha(e.target.value)}
         />
       </div>
 
-      
       <div className="mb-6">
         <label className="block text-gray-700 mb-1">Confirmar senha</label>
         <input
           type="password"
           placeholder="Repita a nova senha"
           className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          value={confirmarSenha}
+          onChange={(e) => setConfirmarSenha(e.target.value)}
         />
       </div>
-
 
       <div className="flex gap-4 justify-center mb-4">
         <button
@@ -87,15 +182,15 @@ export default function FormEditarPerfil({ onExcluirClick }) {
         </button>
         <button
           type="button"
+          onClick={handleCancel}
           className="bg-gray-300 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-400 transition-all"
         >
           Cancelar
         </button>
       </div>
 
-      
       <p 
-        onClick={handleExcluirConta}
+        onClick={onExcluirClick}
         className="text-center text-sm text-gray-500 hover:text-red-600 cursor-pointer">
         Excluir minha conta
       </p>
