@@ -1,17 +1,38 @@
 import { useNavigate } from 'react-router-dom'
 import styles from './FormCadastro.module.css'
 import FormEntry from '../../components/FormEntry'
+import api from "@/api"
+import { useState } from 'react';
 
-export default function FormCadastro({ title, subtitle, cadastro, setIsAuthenticated }) {
+export default function FormCadastro({ title, subtitle, cadastro }) {
   const navigate = useNavigate();
+  const [nome,setNome] = useState("");
+  const [cpf,setCpf] = useState("");
+  const [email,setEmail] = useState("");
+  const [dataNascimento,setDataNascimento] = useState("");
+  const [senha,setSenha] = useState("");
 
-  const handleSubmit = (e) => {
+
+  async function handleSubmit(e){
     e.preventDefault();
-    // Chama a API de cadastro
-    // Se foi bem-sucedido:
-    setIsAuthenticated(true);
-    navigate('/');
-}
+        try {
+      const response = await api.post("/users/cadastro", {
+        nome,
+        cpf,
+        email,
+        dataNascimento,
+        senha
+      });
+
+      console.log("Usuário cadastrado:", response.data);
+
+      navigate("/login");
+    } catch (error) {
+      console.error("Erro ao cadastrar:", error);
+      alert(error?.response?.data?.message || "Erro ao cadastrar.");
+    }
+  }
+
   return (
     <form className={styles.formCadastro} onSubmit={handleSubmit}>
       <h2 className="text-[36px] font-medium text-gray-800">{title}</h2>
@@ -20,6 +41,7 @@ export default function FormCadastro({ title, subtitle, cadastro, setIsAuthentic
       <div className={styles.fields}>
         {/* Nome */}
         <FormEntry
+          onChange={(e) => setNome(e.target.value)}
           label="Nome"
           placeholder="Digite seu nome"
         />
@@ -28,6 +50,7 @@ export default function FormCadastro({ title, subtitle, cadastro, setIsAuthentic
         <div className={styles.both}>
           <div className={styles.halfsize}>
             <FormEntry
+              onChange={(e) => setCpf(e.target.value)}
               label="CPF"
               placeholder="Digite seu CPF"
               inputClass={styles.halfInput}
@@ -39,6 +62,7 @@ export default function FormCadastro({ title, subtitle, cadastro, setIsAuthentic
               <span className="text-gray-500 ml-1">*</span>
             </label>
             <input
+              onChange={(e) => setDataNascimento(e.target.value)}
               type="date"
               className={styles.input}
             />
@@ -48,6 +72,7 @@ export default function FormCadastro({ title, subtitle, cadastro, setIsAuthentic
 
         {/* Email */}
         <FormEntry
+          onChange={(e) => setEmail(e.target.value)}
           label="Email"
           placeholder="Digite seu email"
         />
@@ -59,6 +84,7 @@ export default function FormCadastro({ title, subtitle, cadastro, setIsAuthentic
             <span className="text-gray-500 ml-1">*</span>
           </label>
           <input
+            onChange={(e) => setSenha(e.target.value)}
             type="password"
             placeholder="Digite sua senha"
             className={styles.input}

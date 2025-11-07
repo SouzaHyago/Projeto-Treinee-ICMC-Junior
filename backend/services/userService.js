@@ -4,38 +4,44 @@ import { User } from "../models/User.js";
 import validarCPF from "../utils/cpfValidator.js";
 
 export async function registerUser(dados) {
-  
   const { nome, email, cpf, dataNascimento, senha } = dados;
-  
-  const existing = await User.findOne({ $or: [{ email }, { cpf }] });
-  if (existing) throw new Error("Usuário já cadastrado");
 
-  if (!validarCPF(cpf)) throw new Error("CPF inválido");  
+  const cpfLimpo = cpf.replace(/\D/g, "");
+
+  if (!validarCPF(cpfLimpo)) throw new Error("CPF inválido");
+
+  const existing = await User.findOne({
+    $or: [{ email }, { cpf: cpfLimpo }]
+  });
+  if (existing) throw new Error("Usuário já cadastrado");
 
   const senhaHash = await bcrypt.hash(senha, 10);
 
   const user = await User.create({
     nome,
     email,
-    cpf,
+    cpf: cpfLimpo,
     dataNascimento,
     senhaHash,
   });
-  
-  return user;
+
+  const userSemSenha = user.toObject();
+  delete userSemSenha.senhaHash;
+
+  return userSemSenha;
 }
 
-export async function loginUser(dados) {
 
+export async function loginUser(dados) {
   const { emailCpf, senha, activate } = dados;
+
   const user = await User.findOne({
     $or: [{ email: emailCpf }, { cpf: emailCpf }]
-  });
+  }).select("+senhaHash");  
 
   if (!user) throw new Error("Usuário não encontrado");
 
   if ((!user.ativo) && (!activate)) throw new Error("Conta desativada");
-
 
   const valid = await bcrypt.compare(senha, user.senhaHash);
   if (!valid) throw new Error("Senha incorreta");
@@ -46,6 +52,8 @@ export async function loginUser(dados) {
 
   return { token };
 }
+
+
 
 export async function updateUser(updates,userId) {
   const allowedFields = ["nome", "dataNascimento", "cpf", "email", "senha"];
