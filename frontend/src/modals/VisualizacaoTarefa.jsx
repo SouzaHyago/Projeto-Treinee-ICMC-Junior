@@ -1,11 +1,24 @@
 import Modal from "../components/Modal";
 
-function VisualizacaoTarefa({ tarefa, isOpen, onClose, onEdit, onStart }) {
+const formatarPrazoISO_local = (isoString) => {
+  if (!isoString) return "Sem prazo";
+  const data = new Date(isoString);
+  return data.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+function VisualizacaoTarefa({ tarefa, isOpen, onClose, onEdit }) {
   return (
     <Modal
       title={tarefa.titulo}
       message={
-        <div className="space-y-2 text-left">
+
+        <div className="space-y-2 text-left break-words">
           {tarefa.descricao && (
             <p>
               <strong>Descrição:</strong> {tarefa.descricao}
@@ -13,7 +26,7 @@ function VisualizacaoTarefa({ tarefa, isOpen, onClose, onEdit, onStart }) {
           )}
           {tarefa.prazo && (
             <p>
-              <strong>Prazo:</strong> {tarefa.prazo}
+              <strong>Prazo:</strong> {formatarPrazoISO_local(tarefa.prazo)}
             </p>
           )}
           {tarefa.obs && (

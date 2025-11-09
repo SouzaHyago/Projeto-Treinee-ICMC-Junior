@@ -1,25 +1,42 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
-import FormEntry from "../../components/FormEntry";
-import styles from './FormLogin.module.css';
+import { useNavigate, Link } from "react-router-dom";
+import FormEntry from "@/components/FormEntry";
+import styles from "../FormLogin/FormLogin.module.css";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from 'react-toastify';
 
 export default function FormLogin() {
 	const pronouns = ["o", "a", "e"];
 	const [index, setIndex] = useState(0);
-	const [emailCpf, setEmailCpf] = useState("");
-	const [senha, setSenha] = useState("");
+  const [emailCpf, setEmailCpf] = useState("");
+  const [senha, setSenha] = useState("");
 
-	useEffect(() => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+async function handleSubmit(e) {
+  e.preventDefault();
+
+  try {
+    await login(emailCpf, senha);  
+    navigate("/");     
+  } catch (err) {
+    toast.error(err.response?.data?.error || err.message || "Erro ao fazer login.");
+  }
+}
+
+useEffect(() => {
 		const intervalo = setInterval(() => {
 			setIndex((i) => (i + 1) % pronouns.length);
 		}, 1500);
 
 		return () => clearInterval(intervalo);
-	}, []);
+}, []);
+
 
 	return (
-		<form className={styles.form}>
+		<form className={styles.form} onSubmit={handleSubmit}>
 			<h2 className="text-[36px] font-medium text-gray-800 flex items-center">
 				Bem vind
 				<AnimatePresence mode="wait">
@@ -37,7 +54,9 @@ export default function FormLogin() {
 				!
 			</h2>
 
-			<p className={styles.subtitle}>Insira suas informações para acessar a conta.</p>
+			<p className={styles.subtitle}>
+				Insira suas informações para acessar a conta.
+			</p>
 
 			<FormEntry
 				label="E-mail ou CPF"
@@ -56,13 +75,11 @@ export default function FormLogin() {
 				/>
 			</div>
 
-			<Link to="/">
-				<button type="submit">Entrar</button>
-			</Link>
+			<button type="submit">Entrar</button>
 
 			<div style={{ textAlign: "center" }}>
 				<p>Não tem uma conta?</p>
-				<a href="/cadastro" className={styles.link}>Inscreva-se</a>
+				<Link to="/cadastro" className={styles.link}>Inscreva-se</Link>
 			</div>
 		</form>
 	);

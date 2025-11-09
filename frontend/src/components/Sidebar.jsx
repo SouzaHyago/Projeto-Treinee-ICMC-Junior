@@ -3,18 +3,15 @@ import '../styles/sidebar.css'
 import { FiMenu, FiSearch, FiSettings, FiLogOut, FiGlobe, FiAlertTriangle, FiList, FiChevronsRight, FiCheckSquare } from 'react-icons/fi'
 import { CirclePlus } from "lucide-react";
 import { Link, useLocation } from 'react-router-dom';
-import Logout from '../modals/Logout';
+import LogoutModal from '../modals/Logout';
+import {useAuth} from "@/context/AuthContext"
 
 function Sidebar({ userName, setIsAuthenticated }) {
   const location = useLocation();
+  const {logout} =  useAuth();
 
   const [openModal, setOpenModal] = useState(false);
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setOpenModal(false);
-  }
-  
   return (
     <>
       <aside className="sidebar bg-[#F7FCFE] shadow-xl backdrop-blur-sm bg-opacity-90">
@@ -59,10 +56,10 @@ function Sidebar({ userName, setIsAuthenticated }) {
           </div>
         </div>
       </aside>
-      <Logout
+      <LogoutModal
         isOpen={openModal}
         onClose={() => setOpenModal(false)}
-        onConfirm={handleLogout}  
+        onConfirm={logout}  
       />
     </>
   );

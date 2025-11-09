@@ -37,9 +37,9 @@ function Modal({
           {title}
         </h2>
 
-        <p className="mt-4 text-base text-gray-600">
+        <div className="mt-4 text-base text-gray-600 max-h-80 overflow-y-auto">
           {message}
-        </p>
+        </div>
 
         <div className="mt-8 flex justify-between">
 

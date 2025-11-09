@@ -25,9 +25,10 @@ export async function findAndUpdateTask(id, updates, userId) {
 
 
 // Marcar tarefa como concluída
-export async function complete(id) {
-  return await findAndUpdateTask(id, { status: "CONCLUIDA" });
+export async function complete(id, userId) {
+  return await findAndUpdateTask(id, { status: "CONCLUIDA" }, userId);
 }
+
 
 
 export async function create(dados,userId){
@@ -38,4 +39,10 @@ export async function create(dados,userId){
     })
 
     return task;
+}
+
+
+export async function list(userId) {
+  const tasks = await Task.find({ userId }).sort({ prazo: 1 });
+  return tasks;
 }
