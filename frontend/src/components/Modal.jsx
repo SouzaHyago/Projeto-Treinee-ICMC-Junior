@@ -1,4 +1,4 @@
-import React from "react";
+import { FiX } from "react-icons/fi"
 
 const baseButtonStyle = "text-white px-4 py-2.5 font-medium rounded-full transition shadow-sm min-w-[180px]";
 
@@ -8,11 +8,13 @@ function Modal({
   isOpen,
   onClose,
   onConfirm,
+  onExtraButton,
   lButtonText = "Cancelar",
   rButtonText,
   lButtonStyle = "bg-[#ADADAD] hover:bg-[#8E8E8E]",
   rButtonStyle,
-  swappedButtons = false
+  swappedButtons = false,
+  xToClose = false
 }) {
   if (!isOpen)
     return null;
@@ -21,7 +23,16 @@ function Modal({
     <div onClick={onClose} className="fixed inset-0 bg-black bg-opacity-55 flex justify-center 
                                       items-center z-50 backdrop-blur-sm">
       <div onClick={(e) => e.stopPropagation()} 
-           className="bg-white rounded-2xl shadow-xl w-full max-w-md p-12 text-center m-4">
+           className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-12 text-center m-4">
+        {xToClose && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
+            aria-label="Fechar modal"
+          >
+            <FiX className="h-6 w-6" />
+          </button>
+        )}
         <h2 className="text-2xl font-medium text-gray-900">
           {title}
         </h2>
@@ -42,7 +53,7 @@ function Modal({
 
           {/* Botão Direito */}
           <button
-            onClick={swappedButtons? onClose : onConfirm}
+            onClick={onExtraButton ? onExtraButton : (swappedButtons ? onConfirm : onClose)}
             className={`${baseButtonStyle} ${rButtonStyle}`}
           >
             {rButtonText}

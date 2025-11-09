@@ -1,6 +1,6 @@
 import Modal from "../components/Modal";
 
-function VisualizacaoTarefa({ tarefa, isOpen, onClose, onConfirm }) {
+function VisualizacaoTarefa({ tarefa, isOpen, onClose, onEdit, onStart }) {
   return (
     <Modal
       title={tarefa.titulo}
@@ -24,11 +24,12 @@ function VisualizacaoTarefa({ tarefa, isOpen, onClose, onConfirm }) {
         </div>
       }
       isOpen={isOpen}
-      onClose={onConfirm}
-      onConfirm={onClose}
-      rButtonText="Fechar"
-      lButtonText="Editar"
+      onClose={onClose}
+      onConfirm={onStart}
+      onExtraButton={onEdit}
+      rButtonText="Iniciar tarefa"
       rButtonStyle="bg-[#40869E] hover:bg-[#006186]"
+      lButtonText="Editar"
     />
   );
 }
