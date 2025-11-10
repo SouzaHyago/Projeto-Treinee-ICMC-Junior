@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react"; // ✅ ADICIONADO: useMemo
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import EmptyStatePage from "../components/EmptyStatePage.jsx";
 import CriarTarefa from "./CriarTarefa.jsx";
 import EditarTarefa from "./EditarTarefa.jsx";
@@ -57,14 +57,13 @@ export default function Tarefas() {
   const [menuAberto, setMenuAberto] = useState(null);
   const [menuPosicao, setMenuPosicao] = useState({ top: 0, left: 0 });
   
-  // ✅ ADICIONADO: Estado para controlar o filtro ativo
+  // Estado para controlar o filtro ativo
   const [filtroAtual, setFiltroAtual] = useState("TODAS"); // Pode ser "TODAS", "PENDENTE", "ATRASADA", "CONCLUIDA"
 
   const tabelaRef = useRef(null);
   const menuRefs = useRef({});
   const menuFlutuanteRef = useRef(null);
 
-  // (useEffect de busca de tarefas sem alterações)
   useEffect(() => {
     async function getTasks() {
       try {
@@ -84,7 +83,6 @@ export default function Tarefas() {
     document.title = "Tarefas";
   }, []);
 
-  // (useEffect de fechar menu sem alterações)
   useEffect(() => {
     function handleClickFora(event) {
       if (menuFlutuanteRef.current && !menuFlutuanteRef.current.contains(event.target)) {
@@ -100,7 +98,6 @@ export default function Tarefas() {
     };
   }, [menuAberto]);
 
-  // (useEffect de calcular itens por página sem alterações)
   useEffect(() => {
     function calcularItensPorPagina() {
       const tabelaContainer = tabelaRef.current;
@@ -124,7 +121,7 @@ export default function Tarefas() {
   }, [tarefas]);
 
 
-  // ✅ ADICIONADO: Lógica de filtragem
+  // Lógica de filtragem
   const tarefasFiltradas = useMemo(() => {
     const agora = new Date();
     
@@ -156,10 +153,9 @@ export default function Tarefas() {
   }, [tarefas, filtroAtual]); // Recalcula quando as tarefas ou o filtro mudarem
 
 
-  // ✅ ALTERAÇÃO: 'totalPaginas' agora usa 'tarefasFiltradas'
+  // 'totalPaginas' agora usa 'tarefasFiltradas'
   const totalPaginas = Math.max(1, Math.ceil(tarefasFiltradas.length / itensPorPagina));
 
-  // (useEffect de resetar página sem alterações, mas agora depende de 'totalPaginas' filtrado)
   useEffect(() => {
     if (paginaAtual > totalPaginas) {
       setPaginaAtual(totalPaginas);
@@ -167,13 +163,11 @@ export default function Tarefas() {
   }, [totalPaginas, paginaAtual]);
 
 
-  // ✅ ALTERAÇÃO: 'tarefasVisiveis' agora usa 'tarefasFiltradas'
   const tarefasVisiveis = tarefasFiltradas.slice(
     (paginaAtual - 1) * itensPorPagina,
     paginaAtual * itensPorPagina
   );
 
-  // (Função 'corPrazo' sem alterações)
   function corPrazo(isoPrazo) {
     if (!isoPrazo) return { cor: "bg-gray-100 text-gray-500 border border-gray-200", label: "Sem prazo" };
     const dataPrazo = new Date(isoPrazo);
@@ -189,7 +183,6 @@ export default function Tarefas() {
     return { cor: "bg-[#C1E0C5] text-[#517255] border border-[#A8C7AD]", label: "No prazo" };
   }
   
-  // (Função 'toggleMenu' sem alterações)
   const toggleMenu = (tarefaId) => {
     const buttonRef = menuRefs.current[tarefaId];
     if (buttonRef) {
@@ -202,7 +195,6 @@ export default function Tarefas() {
     setMenuAberto((prev) => (prev === tarefaId ? null : tarefaId));
   };
 
-  // ✅ ADICIONADO: Função para lidar com clique nos filtros
   const handleFiltroClick = (novoFiltro) => {
     // Se clicar no filtro já ativo, desativa (mostra "TODAS")
     // Se clicar em um novo, ativa o novo
@@ -214,7 +206,6 @@ export default function Tarefas() {
   };
 
   
-  // --- Funções de Manipulação de Tarefas (sem alterações) ---
   const handleSalvarNovaTarefa = (tarefa) => { setTarefas((prev) => [...prev, tarefa].sort(compararPorPrazo)); setView("lista"); };
   const handleSalvarEdicao = (tarefaAtualizada) => { setTarefas((prev) => prev.map((t) => (t._id === tarefaAtualizada._id ? tarefaAtualizada : t)).sort(compararPorPrazo)); setView("lista"); setTarefaAtual(null); };
   const handleEditar = (tarefaId) => { const tarefa = tarefas.find((t) => t._id === tarefaId); if (tarefa) { setTarefaAtual(tarefa); setView("editar"); } setMenuAberto(null); };
