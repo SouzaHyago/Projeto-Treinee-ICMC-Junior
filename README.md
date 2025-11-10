@@ -1,70 +1,151 @@
-# Getting Started with Create React App
+# Projeto Trainee ICMC Junior - Gerenciador de Tarefas
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Um aplicativo web full-stack para gerenciamento de tarefas, construído com React (Vite) no frontend e Node.js (Express, MongoDB) no backend.
 
-## Available Scripts
+O sistema permite que os utilizadores se registem, façam login, e administrem as suas tarefas pessoais através de uma interface limpa e reativa.
 
-In the project directory, you can run:
+## ✨ Funcionalidades Principais
 
-### `npm start`
+* **Autenticação de Utilizador:** Sistema completo de registo e login de utilizador.
+* **Gestão de Sessão:** Utilização de JSON Web Tokens (JWT) para autenticação e proteção de rotas.
+* **CRUD de Tarefas:** Funcionalidade completa para Criar, Ler, Atualizar e Excluir tarefas.
+* **Gestão de Perfil:** Os utilizadores podem ver e atualizar as suas informações de perfil, incluindo nome, CPF, data de nascimento e senha.
+* **Exclusão de Conta:** Os utilizadores podem excluir as suas próprias contas (implementado como *soft delete* no backend).
+* **Filtros de Tarefas:** O dashboard principal permite filtrar tarefas por "Todas", "Em andamento", "Atrasadas" e "Concluídas".
+* **Vistas Dedicadas:** Páginas específicas para tarefas "Hoje", "Próximas" (7 dias), "Atrasadas" e "Concluídas".
+* **Rotas Protegidas:** O frontend utiliza rotas públicas e privadas para garantir que apenas utilizadores autenticados possam aceder às páginas de tarefas.
+* **Notificações:** Feedback ao utilizador através de *toasts* para ações como criação, edição e erros.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🛠️ Tecnologias Utilizadas
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Frontend
 
-### `npm test`
+* **React 19**
+* **Vite** (Bundler e Servidor de Desenvolvimento)
+* **Tailwind CSS** (Estilização)
+* **React Router DOM** (Roteamento)
+* **Axios** (Cliente HTTP)
+* **Lucide React** (Ícones)
+* **React Toastify** (Notificações)
+* **Framer Motion** (Animações)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Backend
 
-### `npm run build`
+* **Node.js**
+* **Express.js** (Framework do servidor)
+* **MongoDB** (Banco de dados) com **Mongoose** (ODM)
+* **jsonwebtoken (JWT)** (Autenticação)
+* **bcrypt** (Hash de senhas)
+* **cors** (Cross-Origin Resource Sharing)
+* **dotenv** (Gestão de variáveis de ambiente)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🚀 Como Executar o Projeto
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Pré-requisitos
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* **Node.js** (v18 ou superior)
+* **npm** (ou yarn)
+* **MongoDB** (uma instância local ou um cluster no MongoDB Atlas)
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 1. Configuração do Backend
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1.  Navegue até a pasta do backend:
+    ```bash
+    cd backend
+    ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2.  Instale as dependências:
+    ```bash
+    npm install
+    ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3.  Crie um arquivo `.env` na raiz da pasta `backend` e adicione as seguintes variáveis:
+    ```env
+    # String de conexão do MongoDB
+    DATABASE_URI=sua_string_de_conexao_mongodb_aqui
 
-## Learn More
+    # Segredo para assinar os tokens JWT (pode ser qualquer string segura)
+    JWT_SECRET=seu_segredo_super_secreto_aqui
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    # Porta para o backend. O frontend espera que seja 3001.
+    PORT=3001
+    ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4.  Inicie o servidor de desenvolvimento (com hot-reload):
+    ```bash
+    npm run dev
+    ```
+    O servidor estará em execução em `http://localhost:3001` (ou na porta que você definiu).
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 2. Configuração do Frontend
 
-### Analyzing the Bundle Size
+1.  Em outro terminal, navegue até a pasta do frontend:
+    ```bash
+    cd frontend
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2.  Instale as dependências:
+    ```bash
+    npm install
+    ```
 
-### Making a Progressive Web App
+3.  Inicie o servidor de desenvolvimento Vite:
+    ```bash
+    npm run dev
+    ```
+   
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+4.  Abra o seu navegador e aceda a `http://localhost:5173` (ou qualquer que seja o URL que o Vite indicar no terminal).
 
-### Advanced Configuration
+## 📂 Estrutura de Ficheiros (Simplificada)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
+/
+├── backend/
+│   ├── controllers/    \# Lógica de rotas (userController.js, taskController.js)
+│   ├── models/         \# Schemas do Mongoose (User.js, Task.js)
+│   ├── routes/         \# Definições de rotas (userRoutes.js, taskRoutes.js)
+│   ├── services/       \# Lógica de negócio (userService.js, taskService.js)
+│   ├── .env            \# (A criar) Variáveis de ambiente
+│   ├── server.js       \# Ponto de entrada do servidor Express
+│   └── package.json
+│
+└── frontend/
+├── src/
+│   ├── assets/     \# Imagens e SVGs
+│   ├── components/ \# Componentes reutilizáveis (FormLogin, Sidebar, Modal, etc.)
+│   ├── context/    \# Contexto React (AuthContext.jsx)
+│   ├── modals/     \# Componentes de modal específicos
+│   ├── pages/      \# Componentes de página (Tarefas, Login, Cadastro, etc.)
+│   ├── routes/     \# Componentes de roteamento (privateRoute.jsx)
+│   ├── api.js      \# Configuração do cliente Axios
+│   ├── App.jsx     \# Componente raiz da aplicação
+│   └── main.jsx    \# Ponto de entrada do React/Vite
+├── tailwind.config.js
+├── vite.config.js
+└── package.json
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
+## 🌐 Endpoints da API
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Rotas de Utilizador (`/users`)
+
+* `POST /cadastro`: Regista um novo utilizador.
+* `POST /login`: Autentica um utilizador e retorna um JWT.
+* `GET /profile`: (Autenticado) Retorna o perfil do utilizador logado.
+* `PUT /profile`: (Autenticado) Atualiza o perfil do utilizador logado.
+* `PATCH /profile`: (Autenticado) Desativa (soft delete) a conta do utilizador logado.
+
+### Rotas de Tarefas (`/tasks`)
+
+*Todas as rotas de tarefas são protegidas e exigem autenticação.*
+
+* `POST /`: Cria uma nova tarefa.
+* `GET /`: Lista todas as tarefas do utilizador logado.
+* `PUT /:id`: Atualiza uma tarefa específica pelo seu ID.
+* `DELETE /:id`: Exclui uma tarefa específica pelo seu ID.
+* `PATCH /complete/:id`: Marca uma tarefa específica como concluída.
