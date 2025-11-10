@@ -1,4 +1,3 @@
-// frontend/src/App.jsx
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import AppContent from "./appContent"; 

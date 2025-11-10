@@ -1,4 +1,3 @@
-// frontend/src/pages/CriarTarefa.jsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; 
 import MainContainer from "../components/MainContainer";
@@ -85,7 +84,7 @@ function CriarTarefa({ onSave, onCancel }) {
       bordered={false}
     >
       {/* Container do formulário */}
-      <div className="flex flex-col justify-between gap-6 -mt-4">
+      <div className="flex flex-col justify-between gap-6 -mt-4 flex-1 overflow-y-auto">
         {/* Inputs de texto */}
         <div className="flex flex-col flex-1 gap-3">
           <FormEntry

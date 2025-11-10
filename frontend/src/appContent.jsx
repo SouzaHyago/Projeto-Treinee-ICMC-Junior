@@ -1,4 +1,3 @@
-// AppContent.jsx
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Tarefas from "./pages/Tarefas";
@@ -18,7 +17,6 @@ import PublicRoute from "./routes/publicRoute";
 import './App.css';
 
 export default function AppContent() {
-  // Obtenha 'user' e 'isAuthenticated' do contexto
   const { logout, user, isAuthenticated } = useAuth();
   const location = useLocation();
 
@@ -29,10 +27,6 @@ export default function AppContent() {
   return (
     <div className={isAuthPage ? "" : "app-container"}>
       
-      {/* Renderize o Sidebar apenas se NÃO for uma página de auth
-        E o usuário ESTIVER autenticado.
-        Passe 'firstName' para a prop 'userName'.
-      */}
       {!isAuthPage && isAuthenticated && (
         <Sidebar userName={firstName} logout={logout} />
       )}

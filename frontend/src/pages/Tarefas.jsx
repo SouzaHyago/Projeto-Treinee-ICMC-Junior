@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react"; // ✅ ADICIONADO: useMemo
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import EmptyStatePage from "../components/EmptyStatePage.jsx";
 import CriarTarefa from "./CriarTarefa.jsx";
 import EditarTarefa from "./EditarTarefa.jsx";
