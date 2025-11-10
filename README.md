@@ -20,7 +20,7 @@ O sistema permite que os utilizadores se registem, façam login, e administrem a
 
 ### Frontend
 
-* **React 19**
+* **React.js**
 * **Vite** (Bundler e Servidor de Desenvolvimento)
 * **Tailwind CSS** (Estilização)
 * **React Router DOM** (Roteamento)
