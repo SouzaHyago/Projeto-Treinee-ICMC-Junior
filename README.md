@@ -101,33 +101,6 @@ O sistema permite que os utilizadores se registem, façam login, e administrem a
 
 4.  Abra o seu navegador e aceda a `http://localhost:5173` (ou qualquer que seja o URL que o Vite indicar no terminal).
 
-## 📂 Estrutura de Ficheiros (Simplificada)
-
-
-/
-+-- backend/
-|   +-- controllers/    # Lógica de rotas (userController.js, taskController.js)
-|   +-- models/         # Schemas do Mongoose (User.js, Task.js)
-|   +-- routes/         # Definições de rotas (userRoutes.js, taskRoutes.js)
-|   +-- services/       # Lógica de negócio (userService.js, taskService.js)
-|   +-- .env            # (A criar) Variáveis de ambiente
-|   +-- server.js       # Ponto de entrada do servidor Express
-|   +-- package.json
-|
-+-- frontend/
-    +-- src/
-    |   +-- assets/     # Imagens e SVGs
-    |   +-- components/ # Componentes reutilizáveis (FormLogin, Sidebar, Modal, etc.)
-    |   +-- context/    # Contexto React (AuthContext.jsx)
-    |   +-- modals/     # Componentes de modal específicos
-    |   +-- pages/      # Componentes de página (Tarefas, Login, Cadastro, etc.)
-    |   +-- routes/     # Componentes de roteamento (privateRoute.jsx)
-    |   +-- api.js      # Configuração do cliente Axios
-    |   +-- App.jsx     # Componente raiz da aplicação
-    |   +-- main.jsx    # Ponto de entrada do React/Vite
-    +-- tailwind.config.js
-    +-- vite.config.js
-    +-- package.json
 
 ## 🌐 Endpoints da API
 
