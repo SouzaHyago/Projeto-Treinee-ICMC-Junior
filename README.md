@@ -99,7 +99,7 @@ O sistema permite que os utilizadores se registem, façam login, e administrem a
     ```
    
 
-4.  Abra o seu navegador e aceda a `http://localhost:5173` (ou qualquer que seja o URL que o Vite indicar no terminal).
+4.  Abra o seu navegador e acesse `http://localhost:5173` (ou qualquer que seja o URL que o Vite indicar no terminal).
 
 
 ## 🌐 Endpoints da API
