@@ -57,7 +57,6 @@ export default function Tarefas() {
   const [menuAberto, setMenuAberto] = useState(null);
   const [menuPosicao, setMenuPosicao] = useState({ top: 0, left: 0 });
   
-  // ✅ ADICIONADO: Estado para controlar o filtro ativo
   const [filtroAtual, setFiltroAtual] = useState("TODAS"); // Pode ser "TODAS", "PENDENTE", "ATRASADA", "CONCLUIDA"
 
   const tabelaRef = useRef(null);
@@ -124,7 +123,6 @@ export default function Tarefas() {
   }, [tarefas]);
 
 
-  // ✅ ADICIONADO: Lógica de filtragem
   const tarefasFiltradas = useMemo(() => {
     const agora = new Date();
     
@@ -156,7 +154,6 @@ export default function Tarefas() {
   }, [tarefas, filtroAtual]); // Recalcula quando as tarefas ou o filtro mudarem
 
 
-  // ✅ ALTERAÇÃO: 'totalPaginas' agora usa 'tarefasFiltradas'
   const totalPaginas = Math.max(1, Math.ceil(tarefasFiltradas.length / itensPorPagina));
 
   // (useEffect de resetar página sem alterações, mas agora depende de 'totalPaginas' filtrado)
@@ -167,7 +164,6 @@ export default function Tarefas() {
   }, [totalPaginas, paginaAtual]);
 
 
-  // ✅ ALTERAÇÃO: 'tarefasVisiveis' agora usa 'tarefasFiltradas'
   const tarefasVisiveis = tarefasFiltradas.slice(
     (paginaAtual - 1) * itensPorPagina,
     paginaAtual * itensPorPagina
@@ -202,7 +198,6 @@ export default function Tarefas() {
     setMenuAberto((prev) => (prev === tarefaId ? null : tarefaId));
   };
 
-  // ✅ ADICIONADO: Função para lidar com clique nos filtros
   const handleFiltroClick = (novoFiltro) => {
     // Se clicar no filtro já ativo, desativa (mostra "TODAS")
     // Se clicar em um novo, ativa o novo

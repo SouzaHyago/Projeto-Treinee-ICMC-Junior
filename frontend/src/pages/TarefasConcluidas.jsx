@@ -173,7 +173,6 @@ const TarefasConcluidas = () => {
     <MainConatainer
       title="Concluídas"
       count={isEmptyDemo ? 0 : tarefasConcluidas.length}
-      onCountClick={() => setIsEmptyDemo(!isEmptyDemo)}
     >
       {displayedTasks.length === 0 ? (
         <EmptyStatePage text="Ainda não há nenhuma tarefa concluída. 

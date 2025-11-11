@@ -215,7 +215,6 @@ const TarefasAtrasadas = () => {
     <MainContainer
       title="Atrasadas"
       count={isEmptyDemo ? 0 : tarefasAtrasadasPendentes.length}
-      onCountClick={() => setIsEmptyDemo(!isEmptyDemo)}
     >
       {displayedTasks.length === 0 ? (
         <EmptyStatePage text="Ainda não há nenhuma tarefa em atraso." addButton={true} />
