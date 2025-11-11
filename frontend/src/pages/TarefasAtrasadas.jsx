@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import imagemFundo from "../assets/imagem.jpg";
-import { CirclePlus, AlertTriangle } from "lucide-react";
-import { Link } from "react-router-dom"; // Importar o Link
+import { CirclePlus } from "lucide-react";
+import { Link } from "react-router-dom";
 import MainContainer from "../components/MainContainer.jsx";
 import EmptyStatePage from "../components/EmptyStatePage.jsx";
-import api from "@/api"; // Importar o cliente API
+import api from "@/api";
 
 const ICON_STROKE_COLOR = "#949798";
 const ICON_STROKE_STYLE = { color: ICON_STROKE_COLOR };
