@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import EmptyStatePage from "../components/EmptyStatePage.jsx";
+import EmptyStatePage from "@/components/EmptyStatePage.jsx";
 import CriarTarefa from "./CriarTarefa.jsx";
 import EditarTarefa from "./EditarTarefa.jsx";
-import ExcluirTarefa from "../modals/ExcluirTarefa.jsx";
-import VisualizacaoTarefa from "../modals/VisualizacaoTarefa.jsx";
+import ExcluirTarefa from "@/modals/ExcluirTarefa.jsx";
+import VisualizacaoTarefa from "@/modals/VisualizacaoTarefa.jsx";
 import api from "@/api.js";
+import { toast } from "react-toastify"
 import {
   MoreHorizontal,
   Pencil,
@@ -14,6 +15,7 @@ import {
   AlertTriangle,
   Check,
   CirclePlus,
+  Play
 } from "lucide-react";
 
 const ICON_STROKE_COLOR = "#ACAFB0";
@@ -53,7 +55,7 @@ export default function Tarefas() {
   const [tarefaExcluir, setTarefaExcluir] = useState(null);
   const [tarefaVisualizar, setTarefaVisualizar] = useState(null);
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const [itensPorPagina, setItensPorPagina] = useState(5);
+  const [itensPorPagina, setItensPorPagina] = useState(7);
   const [menuAberto, setMenuAberto] = useState(null);
   const [menuPosicao, setMenuPosicao] = useState({ top: 0, left: 0 });
   
@@ -118,7 +120,7 @@ export default function Tarefas() {
       clearTimeout(timer);
       window.removeEventListener("resize", calcularItensPorPagina);
     };
-  }, [tarefas]);
+  }, []);
 
 
   // Lógica de filtragem
@@ -136,16 +138,15 @@ export default function Tarefas() {
         return tarefa.status === "CONCLUIDA";
       }
       
-      // Filtro de EM ANDAMENTO (todas pendentes)
-      // (Seu model usa "PENDENTE" para "Em andamento")
-      if (filtroAtual === "PENDENTE") {
-        return tarefa.status === "PENDENTE";
+      // Filtro de EM ANDAMENTO (tarefas iniciadas)
+      if (filtroAtual === "EM ANDAMENTO") {
+        return tarefa.status === "EM ANDAMENTO";
       }
 
       // Filtro de ATRASADAS (pendentes E com prazo vencido)
       if (filtroAtual === "ATRASADA") {
         const dataPrazo = new Date(tarefa.prazo);
-        return tarefa.status === "PENDENTE" && dataPrazo < agora;
+        return (tarefa.status === "PENDENTE" || tarefa.status === "EM ANDAMENTO") && dataPrazo < agora;
       }
       
       return false; // Nunca deve chegar aqui
@@ -153,7 +154,6 @@ export default function Tarefas() {
   }, [tarefas, filtroAtual]); // Recalcula quando as tarefas ou o filtro mudarem
 
 
-  // 'totalPaginas' agora usa 'tarefasFiltradas'
   const totalPaginas = Math.max(1, Math.ceil(tarefasFiltradas.length / itensPorPagina));
 
   useEffect(() => {
@@ -167,6 +167,8 @@ export default function Tarefas() {
     (paginaAtual - 1) * itensPorPagina,
     paginaAtual * itensPorPagina
   );
+
+  const idUltimaTarefa = tarefasFiltradas.length > 0 ? tarefasFiltradas[tarefasFiltradas.length - 1]._id : null;
 
   function corPrazo(isoPrazo) {
     if (!isoPrazo) return { cor: "bg-gray-100 text-gray-500 border border-gray-200", label: "Sem prazo" };
@@ -206,18 +208,47 @@ export default function Tarefas() {
   };
 
   
-  const handleSalvarNovaTarefa = (tarefa) => { setTarefas((prev) => [...prev, tarefa].sort(compararPorPrazo)); setView("lista"); };
-  const handleSalvarEdicao = (tarefaAtualizada) => { setTarefas((prev) => prev.map((t) => (t._id === tarefaAtualizada._id ? tarefaAtualizada : t)).sort(compararPorPrazo)); setView("lista"); setTarefaAtual(null); };
-  const handleEditar = (tarefaId) => { const tarefa = tarefas.find((t) => t._id === tarefaId); if (tarefa) { setTarefaAtual(tarefa); setView("editar"); } setMenuAberto(null); };
-  const handleEditarVisualizacao = () => { if (tarefaVisualizar) handleEditar(tarefaVisualizar._id); setTarefaVisualizar(null); }; 
-  const handleExcluir = (tarefaId) => { setTarefaExcluir(tarefaId); setMenuAberto(null); };
+  const handleSalvarNovaTarefa = (tarefa) => {
+    setTarefas((prev) => [...prev, tarefa].sort(compararPorPrazo));
+    setView("lista");
+  };
+  const handleSalvarEdicao = (tarefaAtualizada) => { 
+    setTarefas((prev) => prev.map((t) => (t._id === tarefaAtualizada._id ? tarefaAtualizada : t)).sort(compararPorPrazo));
+    setView("lista");
+    setTarefaAtual(null);
+  };
+  const handleEditar = (tarefaId) => {
+    const tarefa = tarefas.find((t) => t._id === tarefaId);
+    if (tarefa) {
+      setTarefaAtual(tarefa);
+      setView("editar");
+    }
+    setMenuAberto(null);
+  };
+  const handleEditarVisualizacao = () => {
+    if (tarefaVisualizar) handleEditar(tarefaVisualizar._id);
+    setTarefaVisualizar(null);
+  }; 
+  const handleExcluir = (tarefaId) => {
+    setTarefaExcluir(tarefaId);
+    setMenuAberto(null);
+  };
   const confirmarExclusao = () => { 
-    if (tarefaExcluir) { 
-      api.delete(`/tasks/${tarefaExcluir}`).then(() => { 
+    if (!tarefaExcluir) return;
+
+    const idExcluir = tarefaExcluir._id ? tarefaExcluir._id : tarefaExcluir;
+    api.delete(`/tasks/${idExcluir}`)
+      .then((res) => { 
+        console.log|("API DELETE realizado com sucesso:", res.data);
         setTarefas((prev) => prev.filter((t) => t._id !== tarefaExcluir)); 
-        setTarefaExcluir(null); 
-      }).catch(err => console.error("Erro ao excluir:", err)); 
-    } 
+        toast.success("Tarefa excluída.");
+      })
+      .catch(err => {
+        console.error("Erro ao excluir:", err.response?.data || err.message);
+        toast.error("Erro ao excluir tarefa.");
+      })
+      .finally(() => { setTarefaExcluir(null) });
+
   };
   const cancelarExclusao = () => setTarefaExcluir(null);
   const handleCancelar = () => { setView("lista"); setTarefaAtual(null); };
@@ -225,6 +256,44 @@ export default function Tarefas() {
   const handleAbrirVisualizacao = (tarefa) => setTarefaVisualizar(tarefa);
   const handleFecharVisualizacao = () => setTarefaVisualizar(null);
   const handleVisualizar = (tarefaId) => { const tarefa = tarefas.find((t) => t._id === tarefaId); if (tarefa) handleAbrirVisualizacao(tarefa); setMenuAberto(null); };
+  const handleIniciarTarefa = (tarefaOriginal) => {
+    const tarefaId = tarefaOriginal._id;
+    const update = { status: "EM ANDAMENTO" };
+    const tarefaAtualizada = { ...tarefaOriginal, status: "EM ANDAMENTO" };
+
+    handleSalvarEdicao(tarefaAtualizada);
+    setTarefaVisualizar(null);
+
+    api.put(`/tasks/${tarefaId}`, update)
+      .then((res) => {
+        console.log("API UPDATE realizado com sucesso:", res.data);
+        toast.success("Tarefa iniciada!");
+      })
+      .catch(err => {
+        console.error("Erro ao iniciar tarefa:", err.response?.data || err.message);
+        toast.error("Erro ao iniciar tarefa.");
+        handleSalvarEdicao(tarefaOriginal);
+      });
+  }
+  const handlePausarTarefa = (tarefaOriginal) => {
+    const tarefaId = tarefaOriginal._id;
+    const update = { status: "PENDENTE" };
+    const tarefaAtualizada = { ...tarefaOriginal, status: "PENDENTE" };
+
+    handleSalvarEdicao(tarefaAtualizada);
+    setTarefaVisualizar(null);
+
+    api.put(`/tasks/${tarefaId}`, update)
+      .then((res) => {
+        console.log("API UPDATE realizado com sucesso:", res.data);
+        toast.success("Tarefa pausada");
+      })
+      .catch(err => {
+        console.error("Erro ao suspender tarefa:", err.response?.data || err.message);
+        toast.error("Erro ao suspender tarefa.");
+        handleSalvarEdicao(tarefaOriginal);
+      });
+  }
   const alternarConclusao = (tarefaId) => { 
     const tarefa = tarefas.find(t => t._id === tarefaId); 
     if(tarefa) {
@@ -255,7 +324,7 @@ export default function Tarefas() {
           <p className="text-[15px] font-normal text-gray-500">Gerencie suas tarefas de forma simples e rápida.</p>
         </div>
         <div className={`border border-gray-400 rounded-[50px] ${CUSTOM_BG_COLOR} p-8 flex flex-col flex-1 min-h-0`}>
-          <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+          <div className="flex justify-between items-center mb-5 flex-wrap gap-4">
             <button className={`border border-gray-300 ${CUSTOM_BG_COLOR} text-gray-500 rounded-lg px-4 py-2 text-[14px] font-medium shadow-sm hover:bg-gray-200 transition flex items-center gap-2`} onClick={handleNovaTarefa}>
               <CirclePlus size={16} style={ICON_STROKE_STYLE} /> Nova Tarefa
             </button>
@@ -264,8 +333,8 @@ export default function Tarefas() {
               {/* Filtro Em andamento (ÍCONE: Clock) */}
               <button
                 className={`border border-gray-300 ${CUSTOM_BG_COLOR} text-gray-500 rounded-lg px-4 py-2 text-[14px] font-medium hover:bg-gray-200 transition flex items-center gap-2
-                            ${filtroAtual === "PENDENTE" ? "bg-gray-200 shadow-inner" : "shadow-sm"}`}
-                onClick={() => handleFiltroClick("PENDENTE")}
+                            ${filtroAtual === "EM ANDAMENTO" ? "bg-gray-200 shadow-inner" : "shadow-sm"}`}
+                onClick={() => handleFiltroClick("EM ANDAMENTO")}
               >
                 <Clock size={16} style={ICON_STROKE_STYLE} /> Em andamento
               </button>
@@ -304,7 +373,9 @@ export default function Tarefas() {
               </thead>
               <tbody>
                 {tarefasVisiveis.map((tarefa) => (
-                  <tr key={tarefa._id} className={`border-b border-gray-300 last:border-b-0 hover:bg-gray-100 transition ${CUSTOM_BG_COLOR} cursor-pointer`} onClick={() => handleAbrirVisualizacao(tarefa)}>
+                  <tr key={tarefa._id}
+                  className={`border-b border-gray-300 last:border-b-0 hover:bg-gray-100 transition ${CUSTOM_BG_COLOR} cursor-pointer`}
+                  onClick={() => handleAbrirVisualizacao(tarefa)}>
                     <td className="py-4 px-6 border-r border-gray-300">
                       <div className="flex items-start gap-3">
                         <input 
@@ -334,10 +405,8 @@ export default function Tarefas() {
             </table>
             ) : (
                 <EmptyStatePage
-                    title={tarefas.length === 0 ? "Nenhuma tarefa encontrada" : "Nenhuma tarefa encontrada"}
-                    message={tarefas.length === 0 ? "Crie uma nova tarefa para começar a se organizar." : "Nenhuma tarefa corresponde ao filtro selecionado."}
-                    onAction={tarefas.length === 0 ? handleNovaTarefa : null}
-                    actionText={tarefas.length === 0 ? "Criar primeira tarefa" : null}
+                    text={tarefas.length === 0 ? "Crie uma nova tarefa para começar a se organizar." : "Nenhuma tarefa corresponde ao filtro selecionado."}
+                    customStyle="flex items-center h-screen"
                 />
             )}
           </div>
@@ -345,13 +414,18 @@ export default function Tarefas() {
 
         {menuAberto !== null && (
           <div ref={menuFlutuanteRef} id={`menu-flutuante-${menuAberto}`} className={`absolute border border-gray-200 rounded-lg shadow-2xl w-36 text-sm text-gray-700 z-50 overflow-hidden ${CUSTOM_BG_COLOR}`} style={{ top: menuPosicao.top, left: menuPosicao.left }}>
-            {tarefas.find((t) => t._id === menuAberto) && (
-              <>
-                <button onClick={() => handleEditar(menuAberto)} className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 w-full text-left font-normal transition border-b border-gray-300"><Pencil size={18} className="text-gray-600" /> Editar</button>
-                <button onClick={() => handleVisualizar(menuAberto)} className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 w-full text-left font-normal transition border-b border-gray-300"><ExternalLink size={18} className="text-gray-600" /> Visualizar</button>
-                <button onClick={() => handleExcluir(menuAberto)} className="flex items-center gap-3 px-3 py-2 hover:bg-red-50 w-full text-left font-normal text-gray-600 transition"><Trash2 size={18} className="text-gray-600" /> Excluir</button>
-              </>
-            )}
+            {( () => {
+              const t = tarefas.find((task) => task._id === menuAberto);
+              if (!t) return null;
+              return (
+                <>
+                  <button onClick={() => handleIniciarTarefa(t)} className={`flex items-center gap-3 px-3 py-2 ${t.status === "CONCLUIDA" ? "text-gray-300" : "hover:bg-gray-100"} w-full text-left font-normal transition border-b border-gray-300`}><Play size={18} className={t.status === "CONCLUIDA" ? "text-gray-300" : "text-gray-600"} /> {t.status === "EM ANDAMENTO" ? "Pausar" : "Iniciar"}</button>
+                  <button onClick={() => handleEditar(menuAberto)} className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 w-full text-left font-normal transition border-b border-gray-300"><Pencil size={18} className="text-gray-600" /> Editar</button>
+                  <button onClick={() => handleVisualizar(menuAberto)} className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 w-full text-left font-normal transition border-b border-gray-300"><ExternalLink size={18} className="text-gray-600" /> Visualizar</button>
+                  <button onClick={() => handleExcluir(menuAberto)} className="flex items-center gap-3 px-3 py-2 hover:bg-red-50 w-full text-left font-normal text-gray-600 transition"><Trash2 size={18} className="text-gray-600" /> Excluir</button>
+                </>
+              );
+            })()}
           </div>
         )}
 
@@ -365,8 +439,19 @@ export default function Tarefas() {
           </div>
         )}
       </div>
-      <ExcluirTarefa isOpen={tarefaExcluir !== null} onClose={cancelarExclusao} onConfirm={confirmarExclusao} />
-      {tarefaVisualizar && <VisualizacaoTarefa tarefa={tarefaVisualizar} isOpen={tarefaVisualizar !== null} onClose={handleFecharVisualizacao} onEdit={handleEditarVisualizacao} />}
+      <ExcluirTarefa 
+        isOpen={tarefaExcluir !== null}
+        onClose={cancelarExclusao}
+        onConfirm={confirmarExclusao}
+      />
+
+      {tarefaVisualizar && <VisualizacaoTarefa 
+        tarefa={tarefaVisualizar}
+        isOpen={tarefaVisualizar !== null}
+        onClose={handleFecharVisualizacao}
+        onEdit={handleEditarVisualizacao}
+        onChangeStatus={tarefaVisualizar.status == "EM ANDAMENTO" ? () => handlePausarTarefa(tarefaVisualizar) : () => handleIniciarTarefa(tarefaVisualizar)}
+      />}
     </div>
   );
 }

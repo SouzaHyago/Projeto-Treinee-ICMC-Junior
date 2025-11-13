@@ -8,22 +8,22 @@ function Modal({
   isOpen,
   onClose,
   onConfirm,
-  onExtraButton,
+  onRightButton = onConfirm,
+  onLeftButton = onClose,
   lButtonText = "Cancelar",
   rButtonText,
   lButtonStyle = "bg-[#ADADAD] hover:bg-[#8E8E8E]",
   rButtonStyle,
-  swappedButtons = false,
   xToClose = false
 }) {
   if (!isOpen)
     return null;
 
   return (
-    <div onClick={onClose} className="fixed inset-0 bg-black bg-opacity-55 flex justify-center 
-                                      items-center z-50 backdrop-blur-sm">
+    <div onClick={onClose}
+      className="fixed inset-0 bg-black bg-opacity-55 flex justify-center items-center z-50 backdrop-blur-sm">
       <div onClick={(e) => e.stopPropagation()} 
-           className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-12 text-center m-4">
+        className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-12 text-center m-4">
         {xToClose && (
           <button
             onClick={onClose}
@@ -41,11 +41,11 @@ function Modal({
           {message}
         </div>
 
-        <div className="mt-8 flex justify-between">
+        <div className="mt-8 flex justify-between gap-4">
 
           {/* Botão Esquerdo */}
           <button
-            onClick={swappedButtons ? onConfirm : onClose}
+            onClick={onLeftButton}
             className={`${baseButtonStyle} ${lButtonStyle}`}
           >
             {lButtonText}
@@ -53,7 +53,7 @@ function Modal({
 
           {/* Botão Direito */}
           <button
-            onClick={onExtraButton ? onExtraButton : (swappedButtons ? onConfirm : onClose)}
+            onClick={onRightButton}
             className={`${baseButtonStyle} ${rButtonStyle}`}
           >
             {rButtonText}

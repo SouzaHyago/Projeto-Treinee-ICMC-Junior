@@ -12,7 +12,7 @@ const formatarPrazoISO_local = (isoString) => {
   });
 };
 
-function VisualizacaoTarefa({ tarefa, isOpen, onClose, onEdit }) {
+function VisualizacaoTarefa({ tarefa, isOpen, onClose, onEdit, onChangeStatus }) {
   return (
     <Modal
       title={tarefa.titulo}
@@ -38,11 +38,12 @@ function VisualizacaoTarefa({ tarefa, isOpen, onClose, onEdit }) {
       }
       isOpen={isOpen}
       onClose={onClose}
-      onConfirm={onStart}
-      onExtraButton={onEdit}
-      rButtonText="Iniciar tarefa"
+      onRightButton={onChangeStatus}
+      onLeftButton={onEdit}
+      rButtonText={tarefa.status == "EM ANDAMENTO" ? "Pausar tarefa" : "Iniciar tarefa"}
       rButtonStyle="bg-[#40869E] hover:bg-[#006186]"
       lButtonText="Editar"
+      xToClose={true}
     />
   );
 }

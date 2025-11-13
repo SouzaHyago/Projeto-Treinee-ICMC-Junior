@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
   function EmptyStatePage({text, addButton=false}) {
   return(
-    <div className="flex-1 flex justify-center items-center">
+    <div className="h-full flex justify-center items-center">
       <div className="flex flex-col items-center text-center w-full">
         <p className="text-gray-700 font-bold text-[22px] mb-2">
           Nenhuma tarefa
