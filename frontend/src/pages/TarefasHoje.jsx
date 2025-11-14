@@ -230,7 +230,6 @@ const TarefasHoje = () => {
     <MainContainer
       title="Hoje"
       count={isEmptyDemo ? 0 : tarefasPendentesHoje.length}
-      onCountClick={() => setIsEmptyDemo(!isEmptyDemo)}
     >
       {displayedTasks.length === 0 ? (
         <EmptyStatePage text="Ainda não há nenhuma tarefa criada nesse período. Se quiser adicionar uma,

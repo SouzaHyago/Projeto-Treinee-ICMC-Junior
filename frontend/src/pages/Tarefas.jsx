@@ -59,7 +59,6 @@ export default function Tarefas() {
   const [menuAberto, setMenuAberto] = useState(null);
   const [menuPosicao, setMenuPosicao] = useState({ top: 0, left: 0 });
   
-  // Estado para controlar o filtro ativo
   const [filtroAtual, setFiltroAtual] = useState("TODAS"); // Pode ser "TODAS", "PENDENTE", "ATRASADA", "CONCLUIDA"
 
   const tabelaRef = useRef(null);
@@ -123,7 +122,6 @@ export default function Tarefas() {
   }, []);
 
 
-  // Lógica de filtragem
   const tarefasFiltradas = useMemo(() => {
     const agora = new Date();
     
