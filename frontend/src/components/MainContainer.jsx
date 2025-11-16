@@ -4,7 +4,6 @@ export default function MainContainer({
   count,
   onCountClick,
   bordered=true,
-  isMainPage=false,
   children,
 }) {
   const CUSTOM_BG_COLOR = "bg-[#F7FCFE]";

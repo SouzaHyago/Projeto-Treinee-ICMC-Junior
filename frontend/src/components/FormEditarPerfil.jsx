@@ -103,9 +103,9 @@ export default function FormEditarPerfil({ currentUser, onExcluirClick }) {
   return (
     <form 
       onSubmit={handleSubmit}
-      className="bg-[#F7FCFE] rounded-2xl p-10 w-full max-w-lg shadow-sm border border-gray-200"
+      className="w-3/4 -mt-6"
     >
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Editar Perfil</h2>
+      <h2 className="text-3xl font-semibold text-gray-800 mb-6 flex justify-center">Editar Perfil</h2>
 
       <div className="mb-4">
         <label className="block text-gray-700 mb-1">Nome</label>
@@ -173,25 +173,31 @@ export default function FormEditarPerfil({ currentUser, onExcluirClick }) {
         />
       </div>
 
-      <div className="flex gap-4 justify-center mb-4">
-        <button
-          type="submit"
-          className="bg-[#84A7B8] text-white px-6 py-2 rounded-full hover:bg-[#6b95a5] transition-all"
-        >
-          Salvar mudanças
-        </button>
+      <div className="flex gap-10 justify-center mt-10 mb-8">
         <button
           type="button"
           onClick={handleCancel}
-          className="bg-gray-300 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-400 transition-all"
+          className="px-4 py-2 min-w-[200px]
+              text-white bg-[#A0A3A4] 
+              rounded-full border-gray-700 shadow-sm 
+              hover:bg-[#767676] transition-all"
         >
           Cancelar
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 min-w-[200px]
+              text-white bg-[#40869E]
+              rounded-full border-gray-700 shadow-sm 
+              hover:bg-[#006186] transition-all"
+        >
+          Salvar mudanças
         </button>
       </div>
 
       <p 
         onClick={onExcluirClick}
-        className="text-center text-sm text-gray-500 hover:text-red-600 cursor-pointer">
+        className="text-center text-sm text-gray-500 hover:text-red-600 cursor-pointer w-fit mx-auto">
         Excluir minha conta
       </p>
     </form>

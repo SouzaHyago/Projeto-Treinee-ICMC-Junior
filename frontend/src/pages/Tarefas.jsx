@@ -4,6 +4,7 @@ import CriarTarefa from "./CriarTarefa.jsx";
 import EditarTarefa from "./EditarTarefa.jsx";
 import ExcluirTarefa from "@/modals/ExcluirTarefa.jsx";
 import VisualizacaoTarefa from "@/modals/VisualizacaoTarefa.jsx";
+import MainContainer from "@/components/MainContainer";
 import api from "@/api.js";
 import { toast } from "react-toastify"
 import {
@@ -166,8 +167,6 @@ export default function Tarefas() {
     paginaAtual * itensPorPagina
   );
 
-  const idUltimaTarefa = tarefasFiltradas.length > 0 ? tarefasFiltradas[tarefasFiltradas.length - 1]._id : null;
-
   function corPrazo(isoPrazo) {
     if (!isoPrazo) return { cor: "bg-gray-100 text-gray-500 border border-gray-200", label: "Sem prazo" };
     const dataPrazo = new Date(isoPrazo);
@@ -309,7 +308,13 @@ export default function Tarefas() {
 
 
   if (loading) {
-    return <div className="flex justify-center items-center h-full">Carregando tarefas...</div>;
+    return (
+      <MainContainer title="Tarefas">
+        <div className="flex-1 flex justify-center items-center">
+          <p className="text-gray-500">Carregando tarefas...</p>
+        </div>
+      </MainContainer>
+    );
   }
   if (view === "criar") return <CriarTarefa onSave={handleSalvarNovaTarefa} onCancel={handleCancelar} />;
   if (view === "editar" && tarefaAtual) return <EditarTarefa tarefa={tarefaAtual} onSave={handleSalvarEdicao} onCancel={handleCancelar} />;

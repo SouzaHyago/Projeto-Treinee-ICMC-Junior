@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CirclePlus } from "lucide-react";
 import { Link } from "react-router-dom";
-import MainConatainer from "../components/MainContainer.jsx";
+import MainContainer from "../components/MainContainer.jsx";
 import EmptyStatePage from "../components/EmptyStatePage.jsx";
 import api from "@/api";
 
@@ -161,16 +161,16 @@ const TarefasConcluidas = () => {
 
   if (loading) {
     return (
-      <MainConatainer title="Concluídas">
+      <MainContainer title="Concluídas">
         <div className="flex-1 flex justify-center items-center">
           <p className="text-gray-500">Carregando tarefas...</p>
         </div>
-      </MainConatainer>
+      </MainContainer>
     );
   }
 
   return (
-    <MainConatainer
+    <MainContainer
       title="Concluídas"
       count={isEmptyDemo ? 0 : tarefasConcluidas.length}
     >
@@ -214,7 +214,7 @@ const TarefasConcluidas = () => {
           </div>
         </div>
       )}
-    </MainConatainer>
+    </MainContainer>
   );
 };
 
