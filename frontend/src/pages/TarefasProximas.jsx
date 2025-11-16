@@ -65,6 +65,18 @@ const formatarPrazoISO_Hora = (isoString) => {
   });
 };
 
+const formatarPrazoISO_Dia = (isoString) => {
+  if (!isoString) return "Sem dia";
+  const data = new Date(isoString);
+  return data.toLocaleString("pt-BR", {
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
 function corPrazo(prazo) {
   const dataPrazo = parsePrazoToDate(prazo);
   if (!dataPrazo) return "bg-gray-100 text-gray-500 border border-gray-200";
@@ -99,17 +111,39 @@ const compararPorPrazo = (a, b) => {
 
 // --- Componentes Internos ---
 
-const PrazoLabel = ({ prazo }) => (
+const PrazoLabel = ({ prazo, type="Time" }) => (
   <span
     className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow-sm ${corPrazo(
       prazo
     )}`}
   >
-    {formatarPrazoISO_Hora(prazo)} {/* Mostra a hora */}
+    {type === "Time" ? formatarPrazoISO_Hora(prazo) : formatarPrazoISO_Dia(prazo)} {/* Mostra o formato do prazo */}
   </span>
 );
 
-const TaskItem = ({ tarefa, onToggleConcluida }) => {
+const handleSalvarNovaTarefa = (tarefa) => {
+  setTarefas((prev) => [...prev, tarefa].sort(compararPorPrazo));
+  setView("lista");
+};
+const handleSalvarEdicao = (tarefaAtualizada) => {
+  setTarefas((prev) => prev.map((t) => (t._id === tarefaAtualizada._id ? tarefaAtualizada : t)).sort(compararPorPrazo));
+  setView("lista");
+  setTarefaAtual(null);
+};
+const handleEditar = (tarefaId) => {
+  const tarefa = tarefas.find((t) => t._id === tarefaId);
+  if (tarefa) {
+    setTarefaAtual(tarefa);
+    setView("editar");
+  }
+  setMenuAberto(null);
+};
+const handleEditarVisualizacao = () => {
+  if (tarefaVisualizar) handleEditar(tarefaVisualizar._id);
+  setTarefaVisualizar(null);
+}; 
+
+const TaskItem = ({ tarefa, onToggleConcluida, type="Time" }) => {
   const atrasada = isAtrasada(tarefa);
 
   return (
@@ -157,14 +191,14 @@ const TaskItem = ({ tarefa, onToggleConcluida }) => {
         </div>
       </div>
       <div className="flex-shrink-0 ml-4">
-        <PrazoLabel prazo={tarefa.prazo} />
+        <PrazoLabel prazo={tarefa.prazo} type={type} />
       </div>
     </div>
   );
 };
 
 // TaskCard simplificado para receber props (sem estado interno)
-const TaskCard = ({ title, tasks, onToggleConcluida }) => {
+const TaskCard = ({ title, tasks, onToggleConcluida, cardType="Time" }) => {
   
   // Ordena as tarefas recebidas
   const tarefasOrdenadas = [...tasks].sort(compararPorPrazo);
@@ -173,18 +207,18 @@ const TaskCard = ({ title, tasks, onToggleConcluida }) => {
     <div
       className={`
         ${CUSTOM_BG_COLOR} rounded-[25px] p-6 shadow-xl backdrop-blur-sm bg-opacity-90 
-        flex flex-col min-h-[350px] border border-gray-300
+        flex flex-col border max-h-[380px] border-gray-300
       `}
     >
-      <h2 className="text-2xl font-bold text-gray-800 mb-5">{title}</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-3 flex-shrink-0">{title}</h2>
       
-      <div className="border-b border-gray-100 pb-3 mb-2 flex-shrink-0">
+      <div className="pb-3 mb-2 flex-shrink-0">
         <Link to="/criar-tarefa">
           <button
             className={`
               flex items-center w-full px-4 py-2 
-              text-[#949798] bg-transparent border border-[#949798] 
-              rounded-lg shadow-sm hover:bg-gray-200 transition
+              text-[#949798] bg-transparent border border-2 border-gray-200 
+              rounded-xl shadow-sm hover:bg-gray-200 hover:border-gray-300 transition
             `}
           >
             <CirclePlus
@@ -206,6 +240,7 @@ const TaskCard = ({ title, tasks, onToggleConcluida }) => {
               key={tarefa._id}
               tarefa={tarefa}
               onToggleConcluida={onToggleConcluida} // Passa o handler do pai
+              type={cardType}
             />
           ))
         )}
@@ -325,8 +360,8 @@ export default function TarefasProximas() {
       bordered={false}
     >
       
-      <div className="flex-1 overflow-y-auto pr-2">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      {/* <div className="flex-1 overflow-y-auto pr-2"> */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 flex-shrink-0">
           <TaskCard 
             title="Hoje" 
             tasks={tarefasHoje} 
@@ -339,14 +374,15 @@ export default function TarefasProximas() {
           />
         </div>
 
-        <div>
+        <div className="flex-1 min-h-0">
           <TaskCard 
             title="Esta semana" 
             tasks={tarefasEstaSemana} 
             onToggleConcluida={handleToggleConcluida} 
+            cardType="Day"
           />
         </div>
-      </div>
+      {/* </div> */}
       
     </MainContainer>
   );
