@@ -84,7 +84,7 @@ function CriarTarefa({ onSave, onCancel }) {
       bordered={false}
     >
       {/* Container do formulário */}
-      <div className="flex flex-col justify-between gap-6 -mt-4 flex-1 overflow-y-auto">
+      <div className="flex flex-col justify-between p-2 gap-6 -mt-8 flex-1 overflow-y-auto">
         {/* Inputs de texto */}
         <div className="flex flex-col flex-1 gap-3">
           <FormEntry
