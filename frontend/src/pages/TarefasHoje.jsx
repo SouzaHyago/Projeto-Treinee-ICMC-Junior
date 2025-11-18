@@ -15,12 +15,12 @@ const CUSTOM_BG_COLOR = "bg-[#F7FCFE]";
 const COR_ALERTA_ATRASO = "#CABD72";
 const COR_LINHA_DIVISORIA = "#949798";
 
-// --- Definições de Data ---
+// Definições de Data
 const AGORA = new Date();
 const HOJE = new Date(AGORA.getFullYear(), AGORA.getMonth(), AGORA.getDate());
 const AMANHA = new Date(HOJE.getTime() + 86400000);
 
-// --- Funções Auxiliares ---
+// Funções Auxiliares
 
 const parsePrazoToDate = (prazo) => {
   if (!prazo) return null;
@@ -74,7 +74,7 @@ const compararPorPrazo = (a, b) => {
   return dataA.getTime() - dataB.getTime();
 };
 
-// --- Componentes Internos ---
+// Componentes Internos
 
 const PrazoLabel = ({ prazo }) => (
   <span
@@ -135,7 +135,7 @@ const TaskItem = ({ tarefa, onToggleConcluida, onAbrirVisualizacao }) => {
   );
 };
 
-// --- Componente Principal ---
+// Componente principal
 
 export default function TarefasHoje() {
   const location = useLocation();
@@ -168,7 +168,7 @@ export default function TarefasHoje() {
     getTasks();
   }, []);
 
-  // --- Handlers ---
+  // Handlers de ação
 
   const handleClickNovaTarefa = () => {
     setDate(HOJE.toISOString().split('T')[0]);

@@ -169,7 +169,7 @@ const TarefasAtrasadas = () => {
     return tarefas.filter(isAtrasada).sort(compararPorPrazo);
   }, [tarefas]);
 
-  
+
   // Handlers de Ação
 
   const handleSalvarEdicao = (tarefaAtualizada) => {

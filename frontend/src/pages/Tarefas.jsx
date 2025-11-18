@@ -165,8 +165,12 @@ export default function Tarefas() {
     paginaAtual * itensPorPagina
   );
 
-  function corPrazo(isoPrazo) {
+  function corPrazo(isoPrazo, statusTarefa) {
     if (!isoPrazo) return { cor: "bg-gray-100 text-gray-500 border border-gray-200", label: "Sem prazo" };
+    if (statusTarefa === "CONCLUIDA") {
+      return { cor: "bg-[#7d9e81] text-[#dce3dd] border border-[#A8C7AD]", label: "Concluída" };
+
+    }
     const dataPrazo = new Date(isoPrazo);
     const agora = new Date();
     const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
@@ -411,7 +415,7 @@ export default function Tarefas() {
                       </div>
                     </td>
                     <td className="py-4 px-6 text-center border-r border-gray-300">
-                      {(() => { const { cor, label } = corPrazo(tarefa.prazo); return (<span title={label} className={`inline-block px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shadow-sm ${cor}`}>{formatarPrazoISO(tarefa.prazo)}</span>);})()}
+                      {(() => { const { cor, label } = corPrazo(tarefa.prazo, tarefa.status); return (<span title={label} className={`inline-block px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shadow-sm ${cor}`}>{formatarPrazoISO(tarefa.prazo)}</span>);})()}
                     </td>
                     <td className="py-4 px-6 text-center">
                       <button ref={(el) => (menuRefs.current[tarefa._id] = el)} onClick={(e) => { e.stopPropagation(); toggleMenu(tarefa._id);}} className="p-1 rounded-full text-gray-500 hover:bg-gray-200 transition">
