@@ -172,7 +172,7 @@ const TaskCard = ({ title, tasks, onToggleConcluida, onAbrirVisualizacao, onNova
     >
       <h2 className="text-2xl font-bold text-gray-800 mb-3 flex-shrink-0">{title}</h2>
 
-      <div className="pb-3 mb-2 flex-shrink-0">
+      <div className="pb-3 flex-shrink-0 border-b-[2px] border-gray-100">
           <button
             onClick={onNovaTarefa}
             className={`
