@@ -1,14 +1,13 @@
 import { useState, useEffect, useMemo } from "react";
 import { CirclePlus, AlertTriangle } from "lucide-react";
-import { useLocation } from "react-router-dom"; // Importado useLocation
+import { useLocation } from "react-router-dom";
 import MainContainer from "../components/MainContainer.jsx";
 import EmptyStatePage from "../components/EmptyStatePage.jsx";
-// Imports de navegação e modais
 import VisualizacaoTarefa from "../modals/VisualizacaoTarefa.jsx";
 import CriarTarefa from "./CriarTarefa.jsx";
 import EditarTarefa from "./EditarTarefa.jsx";
 import api from "@/api";
-import { toast } from "react-toastify"; // Importado toast
+import { toast } from "react-toastify";
 
 const ICON_STROKE_COLOR = "#949798";
 const ICON_STROKE_STYLE = { color: ICON_STROKE_COLOR };
@@ -136,7 +135,7 @@ const TaskItem = ({ tarefa, onToggleConcluida, onAbrirVisualizacao }) => {
 
 
 const TarefasAtrasadas = () => {
-  const location = useLocation(); // Hook de localização
+  const location = useLocation();
 
   useEffect(() => {
     document.title = "Tarefas Atrasadas";
@@ -145,7 +144,6 @@ const TarefasAtrasadas = () => {
   const [tarefas, setTarefas] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ⭐️ Novos estados para Visualização/Edição
   const [tarefaAtual, setTarefaAtual] = useState(null);
   const [tarefaVisualizar, setTarefaVisualizar] = useState(null);
   const [view, setView] = useState("board"); // 'board', 'criar', 'editar'
@@ -171,6 +169,7 @@ const TarefasAtrasadas = () => {
     return tarefas.filter(isAtrasada).sort(compararPorPrazo);
   }, [tarefas]);
 
+  
   // Handlers de Ação
 
   const handleSalvarEdicao = (tarefaAtualizada) => {
