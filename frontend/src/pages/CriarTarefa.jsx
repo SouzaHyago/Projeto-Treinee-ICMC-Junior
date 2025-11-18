@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; 
 import MainContainer from "../components/MainContainer";
 import FormEntry from "../components/FormEntry";
 import CancelarEdicao from "../modals/CancelarEdicao";
 import api from "@/api.js";
 import { toast } from 'react-toastify';
 
-function CriarTarefa({ onSave, onCancel }) { 
-  
-  const navigate = useNavigate(); 
+function CriarTarefa({ onSave, onCancel, presetDate }) {
   
   useEffect(() => {
     document.title = "Criar Tarefa";
@@ -16,7 +13,7 @@ function CriarTarefa({ onSave, onCancel }) {
 
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [data, setData] = useState("");
+  const [data, setData] = useState(presetDate || "");
   const [horario, setHorario] = useState("");
   const [obs, setObs] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,15 +39,11 @@ function CriarTarefa({ onSave, onCancel }) {
 
       toast.success("Tarefa criada com sucesso!");
 
-      if (typeof onSave === "function") {
-        onSave(res.data); 
-      } else {
-        navigate("/pagina-inicial"); 
-      }
+      if (typeof onSave === "function")
+        onSave(res.data);
 
     } catch (error) {
       console.error("Erro ao criar tarefa:", error);
-      
       toast.error("Erro ao salvar a tarefa: " + (error.response?.data?.error || "Erro desconhecido"));
     }
   }
@@ -62,16 +55,12 @@ function CriarTarefa({ onSave, onCancel }) {
       } else {
         onCancel();
       }
-    } else {
-      navigate("/pagina-inicial");
     }
   }
 
   function handleConfirmCancel() {
     if (typeof onCancel === "function") {
       onCancel();
-    } else {
-      navigate("/pagina-inicial");
     }
     setIsModalOpen(false);
   }

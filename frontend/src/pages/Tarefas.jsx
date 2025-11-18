@@ -111,7 +111,7 @@ export default function Tarefas() {
         const calculado = Math.max(1, Math.floor(alturaDisponivelParaLinhas / alturaLinha));
         setItensPorPagina(calculado);
       } else {
-        setItensPorPagina(5);
+        setItensPorPagina(7);
       }
     }
     const timer = setTimeout(calcularItensPorPagina, 50);
@@ -294,14 +294,17 @@ export default function Tarefas() {
   const alternarConclusao = (tarefaId) => { 
     const tarefa = tarefas.find(t => t._id === tarefaId); 
     if(tarefa) {
+      const statusOriginal = tarefa.status;
       const novoStatus = tarefa.status === 'CONCLUIDA' ? 'PENDENTE' : 'CONCLUIDA';
       const updatePayload = { status: novoStatus };
       const atualizada = {...tarefa, status: novoStatus}; 
-      handleSalvarEdicao(atualizada); 
+      handleSalvarEdicao(atualizada);
+      const msg = statusOriginal === 'CONCLUIDA' ? "Status da tarefa alterado" : "Tarefa concluída!";
       api.put(`/tasks/${tarefaId}`, updatePayload).catch(err => {
-          console.error("Erro ao atualizar status:", err);
+          console.error("Erro ao atualizar status:", err)
           handleSalvarEdicao(tarefa); 
-      }); 
+      })
+        .then(toast.success(msg));;
     }
   };
   // --- Fim das Funções de Manipulação ---

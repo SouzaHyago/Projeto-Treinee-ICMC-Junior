@@ -2,7 +2,6 @@ export default function MainContainer({
   title,
   subtitle,
   count,
-  onCountClick,
   bordered=true,
   children,
 }) {
@@ -24,8 +23,7 @@ export default function MainContainer({
             <h1 className="text-3xl font-bold text-gray-800 mr-3">{title}</h1>
             {count !== undefined && (
               <span
-                className="text-base font-semibold px-3 py-1 rounded-full text-gray-800 border border-gray-300 bg-transparent cursor-pointer hover:bg-gray-100 transition"
-                onClick={onCountClick}
+                className="text-base font-semibold px-3 py-1 rounded-full text-gray-800 border border-gray-300 bg-transparent"
                 title="Clique para alternar entre preenchido e vazio (Empty State)"
               >
                 {count}

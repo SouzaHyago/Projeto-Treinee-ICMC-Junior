@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import MainContainer from "../components/MainContainer";
 import FormEntry from "../components/FormEntry";
 import CancelarEdicao from "../modals/CancelarEdicao";
@@ -19,9 +18,7 @@ const formatarHorarioParaInput = (data) => {
   return `${horas}:${minutos}`;
 };
 
-function EditarTarefa({ tarefa, onSave, onCancel }) { 
-  const navigate = useNavigate(); 
-
+function EditarTarefa({ tarefa, onSave, onCancel }) {
   useEffect(() => {
     document.title = "Editar Tarefa";
   }, []);
@@ -31,6 +28,8 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
   const [data, setData] = useState("");
   const [horario, setHorario] = useState("");
   const [obs, setObs] = useState("");
+
+  const tarefaOriginal = tarefa;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -45,11 +44,8 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
         setData(formatarDataParaInput(dataPrazo));
         setHorario(formatarHorarioParaInput(dataPrazo));
       }
-    } else {
-      console.warn("Nenhuma tarefa para editar. Redirecionando.");
-      navigate("/pagina-inicial");
     }
-  }, [tarefa, navigate]); 
+  }, [tarefa]); 
 
   function labelOpcional(label) {
     return (
@@ -62,7 +58,7 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
   async function handleSave() {
     
     if (!titulo || !data || !horario) {
-      toast.warn("Por favor, preencha o nome da tarefa, data e horário."); 
+      toast.warn("Nome da tarefa, data e horário são obrigatórios."); 
       return;
     }
 
@@ -74,28 +70,27 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
       
       toast.success("Tarefa atualizada com sucesso!");
 
-      if (typeof onSave === "function") {
+      if (typeof onSave === "function")
         onSave(res.data);
-      } else {
-        navigate("/pagina-inicial");
-      }
 
     } catch (error) {
       console.error("Erro ao atualizar tarefa:", error);
-      
       toast.error("Erro ao salvar a tarefa: " + (error.response?.data?.error || "Erro desconhecido"));
     }
   }
 
   function handleCancel() {
-    setIsModalOpen(true);
+    if (tarefaOriginal.titulo !== titulo ||
+        tarefaOriginal.data !== data ||
+        tarefaOriginal.horario !== horario ||
+        tarefaOriginal.descricao !== descricao ||
+        tarefaOriginal.obs !== obs
+    ) setIsModalOpen(true);
   }
 
   function handleConfirmCancel() {
     if (typeof onCancel === "function") {
       onCancel();
-    } else {
-      navigate("/pagina-inicial");
     }
     setIsModalOpen(false);
   }
