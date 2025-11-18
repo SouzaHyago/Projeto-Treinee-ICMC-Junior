@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import EmptyStatePage from "@/components/EmptyStatePage.jsx";
 import CriarTarefa from "./CriarTarefa.jsx";
 import EditarTarefa from "./EditarTarefa.jsx";
@@ -23,7 +23,6 @@ const ICON_STROKE_COLOR = "#ACAFB0";
 const ICON_STROKE_STYLE = { color: ICON_STROKE_COLOR };
 const CUSTOM_BG_COLOR = "bg-[#F7FCFE]";
 
-// (Função 'compararPorPrazo' atualizada para usar 'status')
 const compararPorPrazo = (a, b) => {
   if (a.status === 'CONCLUIDA' && b.status !== 'CONCLUIDA') return 1;
   if (a.status !== 'CONCLUIDA' && b.status === 'CONCLUIDA') return -1;
@@ -35,7 +34,6 @@ const compararPorPrazo = (a, b) => {
   return dataA.getTime() - dataB.getTime();
 };
 
-// (Função 'formatarPrazoISO' sem alterações)
 const formatarPrazoISO = (isoString) => {
   if (!isoString) return "Sem prazo";
   const data = new Date(isoString);
@@ -252,7 +250,12 @@ export default function Tarefas() {
   const handleNovaTarefa = () => setView("criar");
   const handleAbrirVisualizacao = (tarefa) => setTarefaVisualizar(tarefa);
   const handleFecharVisualizacao = () => setTarefaVisualizar(null);
-  const handleVisualizar = (tarefaId) => { const tarefa = tarefas.find((t) => t._id === tarefaId); if (tarefa) handleAbrirVisualizacao(tarefa); setMenuAberto(null); };
+  const handleVisualizar = (tarefaId) => {
+    const tarefa = tarefas.find((t) => t._id === tarefaId);
+    if (tarefa)
+      handleAbrirVisualizacao(tarefa);
+    setMenuAberto(null);
+  };
   const handleIniciarTarefa = (tarefaOriginal) => {
     const tarefaId = tarefaOriginal._id;
     const update = { status: "EM ANDAMENTO" };
@@ -290,6 +293,16 @@ export default function Tarefas() {
         toast.error("Erro ao suspender tarefa.");
         handleSalvarEdicao(tarefaOriginal);
       });
+  }
+  const handleIniciarPausar = (tarefa) => {
+    if (tarefa.status === "CONCLUIDA")
+      return;
+    if (tarefa.status === "EM ANDAMENTO")
+      handlePausarTarefa(tarefa);
+    else
+      handleIniciarTarefa(tarefa);
+
+    setMenuAberto(null);
   }
   const alternarConclusao = (tarefaId) => { 
     const tarefa = tarefas.find(t => t._id === tarefaId); 
@@ -423,9 +436,16 @@ export default function Tarefas() {
             {( () => {
               const t = tarefas.find((task) => task._id === menuAberto);
               if (!t) return null;
+              const isConcluida = t.status === "CONCLUIDA";
+              const textoAcao = t.status === "EM ANDAMENTO" ? "Pausar" : "Iniciar";
               return (
                 <>
-                  <button onClick={() => handleIniciarTarefa(t)} className={`flex items-center gap-3 px-3 py-2 ${t.status === "CONCLUIDA" ? "text-gray-300" : "hover:bg-gray-100"} w-full text-left font-normal transition border-b border-gray-300`}><Play size={18} className={t.status === "CONCLUIDA" ? "text-gray-300" : "text-gray-600"} /> {t.status === "EM ANDAMENTO" ? "Pausar" : "Iniciar"}</button>
+                  <button onClick={isConcluida ? (e) => e.stopPropagation() : () => handleIniciarPausar(t)} 
+                  disabled={isConcluida}
+                  className={`flex items-center gap-3 px-3 py-2 ${t.status === "CONCLUIDA" ? "text-gray-300" : "hover:bg-gray-100"} w-full text-left font-normal transition border-b border-gray-300`}>
+                    <Play size={18} className={t.status === "CONCLUIDA" ? "text-gray-300" : "text-gray-600"} />
+                    {textoAcao}
+                  </button>
                   <button onClick={() => handleEditar(menuAberto)} className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 w-full text-left font-normal transition border-b border-gray-300"><Pencil size={18} className="text-gray-600" /> Editar</button>
                   <button onClick={() => handleVisualizar(menuAberto)} className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 w-full text-left font-normal transition border-b border-gray-300"><ExternalLink size={18} className="text-gray-600" /> Visualizar</button>
                   <button onClick={() => handleExcluir(menuAberto)} className="flex items-center gap-3 px-3 py-2 hover:bg-red-50 w-full text-left font-normal text-gray-600 transition"><Trash2 size={18} className="text-gray-600" /> Excluir</button>
