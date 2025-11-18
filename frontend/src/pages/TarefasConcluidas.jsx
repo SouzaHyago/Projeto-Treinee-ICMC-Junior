@@ -186,7 +186,7 @@ const TarefasConcluidas = () => {
               <button
                 className={`
                   flex items-center w-full px-4 py-2 
-                  text-[#949798] bg-transparent border border-[#949798] 
+                  text-[#949798] bg-transparent border-[2px] border-gray-300 
                   rounded-lg shadow-sm hover:bg-gray-200 transition
                 `}
               >
