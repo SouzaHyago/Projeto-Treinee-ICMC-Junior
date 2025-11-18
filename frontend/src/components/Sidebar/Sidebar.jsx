@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import './sidebar.css'
-import { FiMenu, FiSearch, FiSettings, FiLogOut, FiGlobe, FiAlertTriangle, FiList, FiChevronsRight, FiCheckSquare } from 'react-icons/fi'
+import { FiSearch, FiSettings, FiLogOut, FiGlobe, FiAlertTriangle, FiList, FiChevronsRight, FiCheckSquare } from 'react-icons/fi'
 import { CirclePlus } from "lucide-react";
 import { Link, useLocation } from 'react-router-dom';
-import LogoutModal from '../modals/Logout';
+import LogoutModal from '@/modals/Logout';
 import {useAuth} from "@/context/AuthContext"
 
 function Sidebar({ userName, setIsAuthenticated }) {
@@ -18,7 +18,6 @@ function Sidebar({ userName, setIsAuthenticated }) {
         <div className="sidebar-contents">
           <div className="sidebar-header">
             <h2>Olá, {userName}</h2>
-            {/* <button className="menu-btn"><FiMenu /></button> */}
           </div>
           <div className="search-box">
             <FiSearch />
