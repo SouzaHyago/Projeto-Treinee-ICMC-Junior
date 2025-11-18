@@ -29,23 +29,38 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
   const [horario, setHorario] = useState("");
   const [obs, setObs] = useState("");
 
-  const tarefaOriginal = tarefa;
-
+  const [originalValues, setOriginalValues] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (tarefa) {
-      setTitulo(tarefa.titulo || "");
-      setDescricao(tarefa.descricao || "");
-      setObs(tarefa.obs || "");
+      const initialTitulo = tarefa.titulo || "";
+      const initialDescricao = tarefa.descricao || "";
+      const initialObs = tarefa.obs || "";
+      let initialData = "";
+      let initialHorario = "";
 
       if (tarefa.prazo) {
         const dataPrazo = new Date(tarefa.prazo);
-        setData(formatarDataParaInput(dataPrazo));
-        setHorario(formatarHorarioParaInput(dataPrazo));
+        initialData = formatarDataParaInput(dataPrazo);
+        initialHorario = formatarHorarioParaInput(dataPrazo);
       }
+
+      setTitulo(initialTitulo);
+      setDescricao(initialDescricao);
+      setObs(initialObs);
+      setData(initialData);
+      setHorario(initialHorario);
+
+      setOriginalValues({
+        titulo: initialTitulo,
+        descricao: initialDescricao,
+        data: initialData,
+        horario: initialHorario,
+        obs: initialObs,
+      });
     }
-  }, [tarefa]); 
+  }, [tarefa]);
 
   function labelOpcional(label) {
     return (
@@ -80,12 +95,23 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
   }
 
   function handleCancel() {
-    if (tarefaOriginal.titulo !== titulo ||
-        tarefaOriginal.data !== data ||
-        tarefaOriginal.horario !== horario ||
-        tarefaOriginal.descricao !== descricao ||
-        tarefaOriginal.obs !== obs
-    ) setIsModalOpen(true);
+    if (!originalValues) {
+      if (typeof onCancel === "function") onCancel();
+      return;
+    }
+
+    const isDirty =
+      originalValues.titulo !== titulo ||
+      originalValues.data !== data ||
+      originalValues.horario !== horario ||
+      originalValues.descricao !== descricao ||
+      originalValues.obs !== obs;
+
+    if (isDirty) {
+      setIsModalOpen(true);
+    } else {
+      if (typeof onCancel === "function") onCancel();
+    }
   }
 
   function handleConfirmCancel() {
@@ -94,6 +120,7 @@ function EditarTarefa({ tarefa, onSave, onCancel }) {
     }
     setIsModalOpen(false);
   }
+
 
   if (!tarefa) {
     return <div>Carregando...</div>; 

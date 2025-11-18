@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import MainContainer from "../components/MainContainer";
 import FormEntry from "../components/FormEntry";
 import CancelarEdicao from "../modals/CancelarEdicao";
 import api from "@/api.js";
 import { toast } from 'react-toastify';
 
-function CriarTarefa({ onSave, onCancel, presetDate }) {
-  
+
+function CriarTarefa({ onSave, onCancel, presetDate, prevLocation="/" }) {
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.title = "Criar Tarefa";
   }, []);
@@ -41,6 +45,8 @@ function CriarTarefa({ onSave, onCancel, presetDate }) {
 
       if (typeof onSave === "function")
         onSave(res.data);
+      else
+        navigate(prevLocation)
 
     } catch (error) {
       console.error("Erro ao criar tarefa:", error);
@@ -48,21 +54,24 @@ function CriarTarefa({ onSave, onCancel, presetDate }) {
     }
   }
 
-  function handleCancel() {
+  const executeCancel = () => {
     if (typeof onCancel === "function") {
-      if (titulo || descricao || data || horario || obs) {
-        setIsModalOpen(true);
-      } else {
-        onCancel();
-      }
+      onCancel();
+    } else {
+      navigate(prevLocation);
     }
+  };
+
+  function handleCancel() {
+    if (titulo || descricao || (data && data !== presetDate) || horario || obs)
+      setIsModalOpen(true);
+    else
+      executeCancel();
   }
 
   function handleConfirmCancel() {
-    if (typeof onCancel === "function") {
-      onCancel();
-    }
     setIsModalOpen(false);
+    executeCancel();
   }
 
   return (

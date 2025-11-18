@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CirclePlus, AlertTriangle} from "lucide-react";
-import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import MainContainer from "../components/MainContainer";
 import EmptyStatePage from "../components/EmptyStatePage.jsx";
 import VisualizacaoTarefa from "../modals/VisualizacaoTarefa.jsx";
@@ -114,7 +114,6 @@ const TaskItem = ({ tarefa, onToggleConcluida, onAbrirVisualizacao, type = "Time
     <div
       className="flex items-center justify-between border-b last:border-b-0 py-3 px-1 hover:bg-gray-50 transition cursor-pointer"
       style={{ borderBottomColor: COR_LINHA_DIVISORIA }}
-      // 2. O onClick agora chama a prop com a tarefa específica
       onClick={() => onAbrirVisualizacao(tarefa)}
     >
       <div className="flex items-start gap-3 w-full min-w-0">
@@ -209,6 +208,8 @@ const TaskCard = ({ title, tasks, onToggleConcluida, onAbrirVisualizacao, onNova
 // Componente principal
 
 export default function TarefasProximas() {
+
+  const location = useLocation();
 
   const [tarefas, setTarefas] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -358,7 +359,7 @@ export default function TarefasProximas() {
     );
   }
 
-  if (view === "criar") return <CriarTarefa onSave={handleSalvarNovaTarefa} onCancel={handleCancelar} presetDate={presetDate}/>;
+  if (view === "criar") return <CriarTarefa onSave={handleSalvarNovaTarefa} onCancel={handleCancelar} presetDate={presetDate} prevLocation={location.pathname}/>;
   if (view === "editar" && tarefaAtual) return <EditarTarefa tarefa={tarefaAtual} onSave={handleSalvarEdicao} onCancel={handleCancelar} />;
 
   return (
@@ -382,7 +383,7 @@ export default function TarefasProximas() {
             tasks={tarefasAmanha}
             onToggleConcluida={handleToggleConcluida}
             onAbrirVisualizacao={handleAbrirVisualizacao}
-            onNovaTarefa={() => handleAbrirCriarTarefa(AMANHA.toISOString().split('T')[0])}
+            onNovaTarefa={() => handleClickNovaTarefa(AMANHA.toISOString().split('T')[0])}
           />
         </div>
 
