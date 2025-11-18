@@ -40,7 +40,7 @@ function VisualizacaoTarefa({ tarefa, isOpen, onClose, onEdit, onChangeStatus })
       onClose={onClose}
       onRightButton={onChangeStatus}
       onLeftButton={onEdit}
-      rButtonText={tarefa.status == "EM ANDAMENTO" ? "Pausar tarefa" : "Iniciar tarefa"}
+      rButtonText={tarefa.status === "EM ANDAMENTO" ? "Pausar tarefa" : "Iniciar tarefa"}
       rButtonStyle="bg-[#40869E] hover:bg-[#006186]"
       lButtonText="Editar"
       xToClose={true}
