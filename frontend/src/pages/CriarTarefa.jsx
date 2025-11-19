@@ -1,3 +1,5 @@
+// Página de criação de uma tarefa
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MainContainer from "../components/MainContainer";
@@ -6,7 +8,7 @@ import CancelarEdicao from "../modals/CancelarEdicao";
 import api from "@/api.js";
 import { toast } from 'react-toastify';
 
-
+// Recebe as funções de ação ao salvar, ao cancelar, uma data predefinida opcional e a localização anterior
 function CriarTarefa({ onSave, onCancel, presetDate, prevLocation="/" }) {
 
   const navigate = useNavigate();
@@ -15,6 +17,7 @@ function CriarTarefa({ onSave, onCancel, presetDate, prevLocation="/" }) {
     document.title = "Criar Tarefa";
   }, []);
 
+  // Valores dos campos do formulário e controle da visualização da modal
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [data, setData] = useState(presetDate || "");
@@ -22,6 +25,7 @@ function CriarTarefa({ onSave, onCancel, presetDate, prevLocation="/" }) {
   const [obs, setObs] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Retorna um componente de label com especificação '(opcional)'
   function labelOpcional(label) {
     return (
       <>
@@ -30,14 +34,18 @@ function CriarTarefa({ onSave, onCancel, presetDate, prevLocation="/" }) {
     );
   }
 
+  // Função que salva a nova tarefa
   async function handleSave() {
+    // Verificação do preenchimento dos campos obrigatórios
     if (!titulo || !data || !horario) {
       toast.warn("Por favor, preencha o nome da tarefa, data e horário."); 
       return;
     }
+    // Cria o prazo da nova tarefa a partir dos campos
     const prazoISO = `${data}T${horario}:00`;
     const novaTarefaData = { titulo, descricao, prazo: prazoISO, obs };
 
+    // Chamada à api do backend para criação da tarefa
     try {
       const res = await api.post("/tasks", novaTarefaData);
 
@@ -54,6 +62,7 @@ function CriarTarefa({ onSave, onCancel, presetDate, prevLocation="/" }) {
     }
   }
 
+  // Ação ao confirmar o cancelamento
   const executeCancel = () => {
     if (typeof onCancel === "function") {
       onCancel();
@@ -62,13 +71,16 @@ function CriarTarefa({ onSave, onCancel, presetDate, prevLocation="/" }) {
     }
   };
 
+  // Ação ao clicar em cancelar
   function handleCancel() {
+    // Abre a janela se algum campo foi escrito
     if (titulo || descricao || (data && data !== presetDate) || horario || obs)
       setIsModalOpen(true);
     else
       executeCancel();
   }
 
+  // Ação entre clicar em confirmar o cancelamento e executá-lo
   function handleConfirmCancel() {
     setIsModalOpen(false);
     executeCancel();
@@ -160,6 +172,7 @@ function CriarTarefa({ onSave, onCancel, presetDate, prevLocation="/" }) {
         </div>
       </div>
     </MainContainer>
+    {/* Modal de confirmação de cancelamento da criação da tarefa */}
     <CancelarEdicao
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
