@@ -1,30 +1,37 @@
-import { FiX } from "react-icons/fi"
+// Janela modal genérica usada como estrutura base para as modais do app
 
+import { FiX } from "react-icons/fi" // Ícone de X
+
+// Estilo base dos botões
 const baseButtonStyle = "text-white px-4 py-2.5 font-medium rounded-full transition shadow-sm min-w-[180px]";
 
 function Modal({ 
   title,
   message,
   isOpen,
+  // Ações podem ser passadas como 'ao fechar' e 'ao confirmar'
+  // ou especificadas para cada botão
   onClose,
   onConfirm,
   onRightButton = onConfirm,
   onLeftButton = onClose,
+  // Texto e estilo dos botões esquerdo e direito
   lButtonText = "Cancelar",
   rButtonText,
   lButtonStyle = "bg-[#ADADAD] hover:bg-[#8E8E8E]",
   rButtonStyle,
+  // Opção de incluir um X para fechar
   xToClose = false
 }) {
   if (!isOpen)
     return null;
 
   return (
-    <div onClick={onClose}
+    <div onClick={onClose} // Click fora fecha a janela
       className="fixed inset-0 bg-black bg-opacity-55 flex justify-center items-center z-50 backdrop-blur-sm">
       <div onClick={(e) => e.stopPropagation()} 
         className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-12 text-center m-4">
-        {xToClose && (
+        {xToClose && ( // Botão X opcional para fechar
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
@@ -33,14 +40,14 @@ function Modal({
             <FiX className="h-6 w-6" />
           </button>
         )}
+        {/* Título e mensagem */}
         <h2 className="text-2xl font-medium text-gray-900">
           {title}
         </h2>
-
         <div className="mt-4 text-base text-gray-600 max-h-80 overflow-y-auto">
           {message}
         </div>
-
+        {/* Botões de ação */}
         <div className="mt-8 flex justify-between gap-4">
 
           {/* Botão Esquerdo */}

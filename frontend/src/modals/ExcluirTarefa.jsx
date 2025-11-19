@@ -1,3 +1,5 @@
+// Modal de confirmação de exclusão de uma tarefa
+
 import Modal from "../components/Modal"
 
 function ExcluirTarefa({ isOpen, onClose, onConfirm}) {

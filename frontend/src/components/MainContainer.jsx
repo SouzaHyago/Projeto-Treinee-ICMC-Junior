@@ -1,9 +1,11 @@
+// Componente que engloba o conteúdo principal das páginas do app
+
 export default function MainContainer({
-  title,
-  subtitle,
-  count,
-  bordered=true,
-  children,
+  title, // Título da página
+  subtitle, // Subtítulo opcional
+  count, // Contador de tarefas opcional
+  bordered=true, // Alternativa de ter ou não borda
+  children, // Conteúdo da página
 }) {
   const CUSTOM_BG_COLOR = "bg-[#F7FCFE]";
 
@@ -16,9 +18,9 @@ export default function MainContainer({
           flex-1 flex flex-col min-h-0 justify-between
         `}
       >
-        {/*Conteúdo acima do bloco principal*/}
+        {/*Conteúdo superior do bloco principal*/}
         <div className="flex flex-col mt-2 ml-4 mb-6 flex-shrink-0">
-          {/*Título e contador (opcional)*/}
+          {/*Título e contador (não obrigatório)*/}
           <div className="flex items-center">
             <h1 className="text-3xl font-bold text-gray-800 mr-3">{title}</h1>
             {count !== undefined && (
@@ -30,7 +32,7 @@ export default function MainContainer({
               </span>
             )}
           </div>
-          {/*Subtítulo (opcional)*/}
+          {/*Subtítulo (não obrigatório) */}
           <div>
             {subtitle && (
               <p className="text-[18px] font-normal text-gray-500 pt-2">

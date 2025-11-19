@@ -1,3 +1,5 @@
+// Modal de confirmação ao sair da conta
+
 import Modal from "../components/Modal"
 
 function Logout({ isOpen, onClose, onConfirm }) {

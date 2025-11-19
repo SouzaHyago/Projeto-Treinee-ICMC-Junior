@@ -1,3 +1,4 @@
+// Barra lateral presente em todas as páginas dentro do app
 import { useState } from 'react';
 import './sidebar.css'
 import { FiSearch, FiSettings, FiLogOut, FiGlobe, FiAlertTriangle, FiList, FiChevronsRight, FiCheckSquare } from 'react-icons/fi'
@@ -16,6 +17,7 @@ function Sidebar({ userName, setIsAuthenticated }) {
     <>
       <aside className="sidebar bg-[#F7FCFE] shadow-xl backdrop-blur-sm bg-opacity-90">
         <div className="sidebar-contents">
+          {/* Parte superior: cabeçalho com nome e barra de pesquisa */}
           <div className="sidebar-header">
             <h2>Olá, {userName}</h2>
           </div>
@@ -23,6 +25,7 @@ function Sidebar({ userName, setIsAuthenticated }) {
             <FiSearch />
             <input type="text" placeholder="Pesquisar tarefa" />
           </div>
+          {/* Seção de navegação entre páginas */}
           <nav className="nav-section">
             <h4>Tarefas</h4>
             <ul>
@@ -49,12 +52,14 @@ function Sidebar({ userName, setIsAuthenticated }) {
               </li>
             </ul>
           </nav>
+          {/* Parte inferior: direcionam para as configurações e sair da conta */}
           <div className="bottom-links">
             <Link to="/configuracoes"><FiSettings /> Configurações</Link>
             <p onClick={() => setOpenModal(true)}><FiLogOut /> Sair</p>
           </div>
         </div>
       </aside>
+      {/* Modal de confirmação de Logout */}
       <LogoutModal
         isOpen={openModal}
         onClose={() => setOpenModal(false)}

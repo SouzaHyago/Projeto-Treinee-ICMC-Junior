@@ -1,3 +1,5 @@
+// Modal de confirmar o cancelamento dea edição de uma tarefa
+
 import Modal from "../components/Modal"
 
 function CancelarEdicao({ isOpen, onClose, onConfirm }) {
