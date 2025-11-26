@@ -382,7 +382,7 @@ export default function Tarefas() {
             </div>
           </div>
           
-          <div className="flex-1 min-h-0 overflow-auto border border-gray-300 rounded-[50px]" ref={tabelaRef}>
+          <div className="flex-1 min-h-0 overflow-y-hidden border border-gray-300 rounded-[50px]" ref={tabelaRef}>
             
             {tarefasFiltradas.length > 0 ? (
             
