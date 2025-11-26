@@ -13,6 +13,13 @@ function Sidebar({ userName, setIsAuthenticated }) {
 
   const [openModal, setOpenModal] = useState(false);
 
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleDateString('pt-BR', {
+    weekday: 'short',
+    day: '2-digit',
+    month: 'short'
+  }).replace(/^\w/, (c) => c.toUpperCase()).replace(/\sde\s(\w)/, (match, letter) => ` de ${letter.toUpperCase()}`);
+
   return (
     <>
       <aside className="sidebar bg-[#F7FCFE] shadow-xl backdrop-blur-sm bg-opacity-90">
@@ -21,9 +28,12 @@ function Sidebar({ userName, setIsAuthenticated }) {
           <div className="sidebar-header">
             <h2>Olá, {userName}</h2>
           </div>
-          <div className="search-box">
+          {/* <div className="search-box">
             <FiSearch />
             <input type="text" placeholder="Pesquisar tarefa" />
+          </div> */}
+          <div className="header-date">
+            <h3>{formattedDate}</h3>
           </div>
           {/* Seção de navegação entre páginas */}
           <nav className="nav-section">
