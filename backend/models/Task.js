@@ -5,6 +5,7 @@ const taskSchema = new mongoose.Schema({
 	titulo: {type: String, required: true},
 	descricao: {type: String},
 	prazo: {type: Date, required: true},
+	obs: { type: String },
 	status: {
 		type: String,
 		enum: ["PENDENTE","ATRASADA","CONCLUIDA","EM ANDAMENTO"],
