@@ -40,6 +40,8 @@ export default function FormEditarPerfil({ currentUser, onExcluirClick }) {
       setDataNascimento(formatarDataParaInput(currentUser.dataNascimento));
       setNovaSenha("");
       setConfirmarSenha("");
+
+      navigate(-1);
     }
     
   };
@@ -92,7 +94,7 @@ export default function FormEditarPerfil({ currentUser, onExcluirClick }) {
         setNovaSenha("");
         setConfirmarSenha("");
       }
-      navigate("/");
+      navigate(-1);
 
     } catch (err) {
       console.error("Erro ao atualizar perfil:", err);
